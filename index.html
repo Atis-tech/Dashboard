@@ -1,0 +1,578 @@
+<!-- BULACAN STATE UNIVERSITY | THESIS PROJECT -->
+<!-- GROUP 1 | AUTOMATION TECHNOLIGIES AND INFORMATION SYSTEM -->
+<!-- PROJECT "WAZTE" | OPTIMIZED PATH ROUTING FOR WASTE MANAGEMENT COLLECTION USING DIJKSTRA ALGORITHM AND ANT COLONY OPTIMIZATION -->
+
+<!-- HTML FILE START -->
+<!DOCTYPE html>
+<html lang="en">
+  <!-- HEAD START -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>WAZTE</title>
+    <!--BOOTSTRAP/JQUERY/JQUERY UI-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js" integrity="sha256-xLD7nhI62fcsEZK2/v8LsBcb4lG7dgULkuXoXB/j91c=" crossorigin="anonymous"></script>
+
+    <!--MAIN SCRIPT-->
+    <script>
+        $(document).ready(function(){
+            for_status();
+            setInterval($('.try div').hide(),360000);
+            for_buttons();
+            for_date();
+            buttons();
+            
+        });
+
+        function for_date(){
+          var date_now=$.datepicker.formatDate('MM dd, yy', new Date());
+          $('#date').html(date_now);
+        }
+        function for_status(){
+            //for conditions
+            var bin1 = 0010;
+            var bin2 = 0100;
+            var bin3 = 0100;
+            var bin4 = 0001;
+            var bin5 = 0010;
+
+            //types of bin status
+            var stat1=0001; //half full
+            var stat2=0010; //minimal
+            var stat3=0011; //empty
+            var stat4=0100; //full
+            var stat5=0101; //error
+
+            var stata="HALF-FULL";
+            var statb="MINIMAL";
+            var statc="EMPTY";
+            var statd="FULL";
+            var state="ERROR";
+
+            //bin image assets
+            var hf_img="images/sidebar/yellowbin.png";
+            var min_img="images/sidebar/bluebin.png";
+            var emp_img="images/sidebar/emptybin.png";
+            var full_img="images/sidebar/fullbin.png";
+            var err_img="images/sidebar/errorbin.png"
+
+            //button background color
+            var bin_error = {'background-color':'#FF2400'};
+            var bin_normal = {'background-color':'#5F5D7C'};
+            var bin_normali = {'background':'#22223B'};
+
+           // Define an array of bin elements
+            const bins = [
+              {id:'#bin_status1', idb:'#bin_status1b', img:'#bin_img1', imgb:'#bin_img1b', bg:'#bin_bg1', bgi:'#bin_info1', value: bin1},  
+              {id:'#bin_status2', idb:'#bin_status2b', img:'#bin_img2', imgb:'#bin_img2b', bg:'#bin_bg2', bgi:'#bin_info2', value: bin2},  
+              {id:'#bin_status3', idb:'#bin_status3b', img:'#bin_img3', imgb:'#bin_img3b', bg:'#bin_bg3', bgi:'#bin_info3', value: bin3},  
+              {id:'#bin_status4', idb:'#bin_status4b', img:'#bin_img4', imgb:'#bin_img4b', bg:'#bin_bg4', bgi:'#bin_info4', value: bin4}, 
+              {id:'#bin_status5', idb:'#bin_status5b', img:'#bin_img5', imgb:'#bin_img5b', bg:'#bin_bg5', bgi:'#bin_info5', value: bin5}
+            ];
+
+          // Loop over the bins and set the values accordingly
+          for (let i = 0; i < bins.length; i++) {
+            const bin = bins[i];
+            const value = bin.value;
+
+            if (value == stat1) { 
+              $(bin.id).html(stata);
+              $(bin.idb).html(stata);
+              $(bin.img).attr('src', hf_img);
+              $(bin.imgb).attr('src', hf_img);
+              $(bin.bg).css(bin_normal);
+              $(bin.bgi).css(bin_normali);
+            } else if (value == stat2) {
+              $(bin.id).html(statb);
+              $(bin.idb).html(statb);
+              $(bin.img).attr('src', min_img);
+              $(bin.imgb).attr('src', min_img);
+              $(bin.bg).css(bin_normal);
+              $(bin.bgi).css(bin_normali);
+            } else if (value == stat3) {
+              $(bin.id).html(statc);
+              $(bin.idb).html(statc);
+              $(bin.img).attr('src', emp_img);
+              $(bin.imgb).attr('src', emp_img);
+              $(bin.bg).css(bin_normal);
+              $(bin.bgi).css(bin_normali);
+            } else if (value == stat4) {
+              $(bin.id).html(statd);
+              $(bin.idb).html(statd);
+              $(bin.img).attr('src', full_img);
+              $(bin.imgb).attr('src', full_img);
+              $(bin.bg).css(bin_normal);
+              $(bin.bgi).css(bin_normali);
+            } else if (value == stat5) {
+              $(bin.id).html(state);
+              $(bin.idb).html(state);
+              $(bin.img).attr('src', err_img);
+              $(bin.imgb).attr('src', err_img);
+              $(bin.bg).css(bin_error);
+              $(bin.bgi).css(bin_error);
+            }
+          }
+          reload_page();
+        }
+        function for_buttons(){
+            var previousInfoId;
+            $('#button_section button').click(function() {
+            var infoId = $(this).attr('data-value');
+
+            // Check if the clicked button corresponds to the currently open container
+            if (previousInfoId === infoId) {
+                return; // Do nothing
+            }
+
+            // Hide the currently open container if it exists
+            if (previousInfoId) {
+                remove_ways();
+                $('#bin_info' + previousInfoId).toggle("slide", {direction: "left"}, 1000);  
+            }
+
+            // Show the newly clicked container
+            $('#bin_info' + infoId).toggle("slide", {direction: "left"}, 1000);
+
+            // Store the ID of the currently clicked container as the previous one
+            previousInfoId = infoId;
+            });
+        }
+      
+      function reload_page(){
+        setInterval(() => {
+          location.reload();
+        }, 360000);
+      }
+
+      function buttons(){
+        $('#bin_btn1').click(function(){
+            $("#I").removeAttr('hidden');
+            $("#J").removeAttr('hidden');
+            $("#M").removeAttr('hidden');
+            $("#N").removeAttr('hidden');
+            $("#Q").removeAttr('hidden');
+            $("#Q1").removeAttr('hidden');
+            $("#T").removeAttr('hidden');
+            $("#U").removeAttr('hidden');
+        });
+        $('#bin_btn2').click(function(){
+            $('#G').removeAttr('hidden');
+            $('#H').removeAttr('hidden');
+            $("#J").removeAttr('hidden');
+            $("#M").removeAttr('hidden');
+            $("#N").removeAttr('hidden');
+            $("#Q").removeAttr('hidden');
+            $("#Q1").removeAttr('hidden');
+            $("#T").removeAttr('hidden');
+            $("#U").removeAttr('hidden');
+        });
+        $('#bin_btn3').click(function(){
+            $("#L").removeAttr('hidden');
+            $("#M").removeAttr('hidden');
+            $("#M").removeAttr('hidden');
+            $("#N").removeAttr('hidden');
+            $("#Q").removeAttr('hidden');
+            $("#Q1").removeAttr('hidden');
+            $("#T").removeAttr('hidden');
+            $("#U").removeAttr('hidden');
+        });
+        $('#bin_btn4').click(function(){
+            $("#Q").removeAttr('hidden');
+            $("#Q1").removeAttr('hidden');
+            $("#T").removeAttr('hidden');
+            $("#U").removeAttr('hidden');
+        });
+        $('#bin_btn5').click(function(){
+            
+            $("#T").removeAttr('hidden');
+            $("#U").removeAttr('hidden');
+        });
+      }
+      function remove_ways(){
+        $('#line-div').find('div:not([hidden])').each(function(){
+          $(this).attr('hidden',true);
+        });
+      }
+    </script>
+
+    <!-- FAVICONS IMPLEMENTATION -->
+    <link rel="shortcut icon" href="images/favicons/Website Logo .png" />
+
+    <!-- CSS IMPLEMENTATION -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- TAILWIND CSS IMPLEMENTATION -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FONT STYLE LINK -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"/>
+
+    <!-- FONT STLE IMPLEMENTATION -->
+    <style>
+    * {
+        font-family: "Montserrat", sans-serif;
+      }
+    </style>
+  </head>
+  <!-- HEAD END  -->
+
+  <!-- BODY START -->
+  <body class="bg-[#1C1D2F] ">
+    <!-- TODO MAIN CONTAINER START -->
+    <div class="flex items-start justify-center w-full h-full bg-[#1C1D2F]">
+      <!-- TODO SIDE BAR SECTION START -->
+      <div class="bg-[#2F304D] w-60 h-screen lg:w-80">
+        <!-- LOGO SECTION START -->
+        <div class="h-28 w-full flex items-center justify-center space-x-4 px-4  border-color-white">
+          <div>
+            <img class="w-16" src="images/sidebar/atislogo.png" alt=""/>
+          </div>
+          <div class="md:hidden lg:flex flex-col">
+            <h1 class="text-white" style="font-size: 10px">AUTOMATION TECHNOLOGIES</h1>
+            <h1 class="text-white" style="font-size: 10px">INFORMATION SYSTEM</h1>
+          </div>
+        </div>
+        <!-- LOGO SECTION END -->
+
+
+        <!-- BIN INFORMATION START -->
+        <div class="mt-[20%] w-full h-fit flex flex-col justify-start items-center space-y-1.5">
+          <!-- BIN INFORMATION LOGO START -->
+          <div class="w-full h-20 md:flex-col lg:flex-row md:space-y-2 md:mb-3 flex items-center justify-center px-2">
+            <img src="images/sidebar/bin-information.png" alt="">
+            <h1 class="text-white font-semibold text-sm">BIN INFORMATION:</h1>
+          </div>
+          <!-- BIN INFORMATION LOGO END -->
+          <div class="w-full" id="button_section">
+          <!-- 1ST BIN STATUS START -->
+          <div class="w-full">
+            <button type="button"  class="btn btn-outline-secondary w-full" id="bin_btn1" data-value="1"> 
+              <div class="w-full h-20 bg-[#5F5D7C] flex items-center justify-between lg:px-5 md:px-3" id="bin_bg1">
+                <div class="flex flex-col">
+                  <h1 class="text-white font-semibold">BIN 1</h1>
+                  <h1 class="text-white text-xs font-light">Alvarado Hall</h1>
+                </div>
+                <div class="flex items-center">
+                  <h1 class="text-sm text-white font-semibold md:hidden lg:flex" id="bin_status1"></h1>
+                  <img class="lg:w-12 md:w-10" src="images/sidebar/yellowbin.png" alt=""  id="bin_img1"/>
+                </div>
+              </div>
+            </button>
+          </div>
+          <!-- 1ST BIN STATUS END -->
+
+          <!-- 2ND BIN STATUS START -->
+          <div class="w-full">
+            <button type="button"  class="btn btn-outline-secondary w-full" id="bin_btn2" data-value="2"> 
+              <div class="w-full h-20 bg-[#5F5D7C] flex items-center justify-between lg:px-5 md:px-3" id="bin_bg2">
+                <div class="flex flex-col">
+                  <h1 class="text-white font-semibold">BIN 2</h1>
+                  <h1 class="text-white text-xs font-light">Pimentel Hall</h1>
+                </div>
+                <div class="flex items-center">
+                  <h1 class="text-sm text-white font-semibold md:hidden lg:flex" id="bin_status2"></h1>
+                  <img class="lg:w-12 md:w-10" src="images/sidebar/bluebin.png" alt=""  id="bin_img2"/>
+                </div>
+              </div>
+            </button>
+          </div>
+          <!-- 2ND BIN STATUS END -->
+
+          <!-- 3RD BIN STATUS START -->
+          <div class="w-full">
+            <button type="button"  class="btn btn-outline-secondary w-full" id="bin_btn3" data-value="3"> 
+              <div class="w-full h-20 bg-[#5F5D7C] flex items-center justify-between lg:px-5 md:px-3" id="bin_bg3">
+                <div class="flex flex-col">
+                  <h1 class="text-white font-semibold">BIN 3</h1>
+                  <h1 class="text-white text-xs font-light">CHTML Bldg</h1>
+                </div>
+                <div class="flex items-center ">
+                  <h1 class="text-sm text-white font-semibold md:hidden lg:flex" id="bin_status3"></h1>
+                  <img class="lg:w-12 md:w-10" src="images/sidebar/emptybin.png" alt=""  id="bin_img3"/>
+                </div>
+              </div>
+            </button>
+          </div>
+          <!-- 3RD BIN STATUS END -->
+
+          <!-- 4TH BIN STATUS START -->
+          <div class="w-full">
+            <button type="button"  class="btn btn-outline-secondary w-full" id="bin_btn4" data-value="4"> 
+              <div class="w-full h-20 bg-[#5F5D7C] flex items-center justify-between lg:px-5 md:px-3" id="bin_bg4">
+                <div class="flex flex-col">
+                  <h1 class="text-white font-semibold">BIN 4</h1>
+                  <h1 class="text-white text-xs font-light">Roxas Hall</h1>
+                </div>
+                <div class="flex items-center ">
+                  <h1 class="text-sm text-white font-semibold md:hidden lg:flex" id="bin_status4"></h1>
+                  <img class="lg:w-12 md:w-10" src="images/sidebar/fullbin.png" alt="" id="bin_img4"/>
+                </div>
+              </div>
+            </button>
+          </div>
+          <!-- 4TH BIN STATUS END -->
+
+          <!-- 5TH BIN STATUS START -->
+          <div class="w-full">
+            <button type="button"  class="btn btn-outline-secondary w-full" id="bin_btn5" data-value="5"> 
+              <div class="w-full h-20 bg-[#B31B1B] flex items-center justify-between lg:px-5 md:px-3" id="bin_bg5">
+                <div class="flex flex-col">
+                  <h1 class="text-white font-semibold">BIN 5</h1>
+                  <h1 class="text-white text-xs font-light">Natividad Hall</h1>
+                </div>
+                <div class="flex items-center">
+                  <h1 class="text-sm text-white font-semibold md:hidden lg:flex" id="bin_status5"></h1>
+                  <img class="lg:w-12 md:w-10" src="images/sidebar/errorbin.png" alt="" id="bin_img5"/>
+                </div>
+              </div>
+            </button>
+          </div>
+          <!-- 5TH BIN STATUS END -->
+        </div>
+        </div>
+        <!-- BIN INFROMATION END -->
+      </div>
+      <!-- TODO SIDE BAR SECTION END -->
+
+      <!-- TODO BODY CONTAINER START -->
+      <div class="flex flex-col w-full">
+        <!-- TODO NAV BAR SECTION START -->
+        <div class="w-full h-28  border-color-white">
+          <div
+            class="flex w-full h-full justify-end items-center md:space-x-6 lg:space-x-14 md:pr-8 lg:pr-16"
+          >
+            <div class="flex space-x-4">
+              <div>
+                <img
+                  class="md:w-8 lg:w-10"
+                  src="images/navbar/location.png"
+                  alt=""
+                />
+              </div>
+              <div>
+                <h1 class="text-xs text-white font-thin">LOCATION:</h1>
+                <h1 class="md:text-xs lg:text-sm text-white">
+                  BULACAN STATE UNIVERSITY
+                </h1>
+              </div>
+            </div>
+
+            <div class="flex space-x-4">
+              <div>
+                <img
+                  class="md:w-8 lg:w-10"
+                  src="images/navbar/date.png"
+                  alt=""
+                />
+              </div>
+              <div>
+                <h1 class="text-xs text-white font-thin">DATE:</h1>
+                <h1 class="md:text-xs lg:text-sm text-white" id="date"></h1>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- TODO NAVBAR SECTION END -->
+
+        <!-- TODO MAP SECTION START -->
+        <div class="mt-[1%] p-8 w-full h-full flex items-center justify-center">
+          <div class="w-fit h-fit  relative">
+
+            <!-- BULSU MAP START -->
+            <div> 
+              <img
+                class="w-[1150px]"
+                src="images/map/Map.png"
+                alt=""
+              />
+            </div>
+            <!-- BULSU MAP END -->
+
+            <!-- TODO | MAP BIN START -->
+            <div class="try">
+            <!-- BIN 1 START -->
+            <img id="bin_img1b" class="w-[5%] absolute top-[14.5%] left-[13.5%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl" src="images/sidebar/yellowbin.png" alt="img_bin1"/>
+            <div id="bin_info1" class="bg-[#1C1D2F] py-1.5 pl-5 pr-5 w-auto h-fit rounded-r-3xl absolute top-[14.5%] left-[17.5%] z-20">
+                <h1 class="text-white text-sm font-bold ">BIN 1</h1>
+                <h1 class="text-white text-xs mb-1.5 ">Alvarado Hall</h1>
+                <h1 class="text-white text-sm font-semibold" id="bin_status1b"></h1>
+            </div>
+            <!-- BIN 1 END -->
+
+            <!-- BIN 2 START -->
+              <img id="bin_img2b"
+                  class="w-[5%] absolute top-[58%] left-[16%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl"
+                  src="images/sidebar/bluebin.png"
+                  alt=""
+                />
+              <div id="bin_info2" class="bg-[#1C1D2F] py-1.5 pl-5 pr-5 w-auto h-fit rounded-r-3xl absolute top-[58%] left-[20%] z-20">
+                <h1 class="text-white text-sm font-bold ">BIN 2</h1>
+                <h1 class="text-white text-xs mb-1.5 ">Pimentel Hall</h1>
+                <h1 class="text-white text-sm font-semibold" id="bin_status2b"></h1>
+              </div>
+            <!-- BIN 2 END -->
+
+            <!-- BIN 3 START -->
+              <img id="bin_img3b"
+                  class="w-[5%] absolute top-[10%] left-[47%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl"
+                  src="images/sidebar/emptybin.png"
+                  alt=""
+                />
+              <div id="bin_info3" class="bg-[#1C1D2F] py-1.5 pl-5 pr-5 w-auto h-fit rounded-r-3xl absolute top-[10%] left-[51%] z-20">
+                <h1 class="text-white text-sm font-bold ">BIN 3</h1>
+                <h1 class="text-white text-xs mb-1.5 ">CHTML Bldg</h1>
+                <h1 class="text-white text-sm font-semibold" id="bin_status3b"></h1>
+              </div>
+              <!-- BIN 3 END -->
+
+              <!-- BIN 4 START -->
+                <img id="bin_img4b"
+                    class="w-[5%] absolute top-[53%] left-[42%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl"
+                    src="images/sidebar/fullbin.png"
+                    alt="" 
+                  />
+                <div id="bin_info4" class="bg-[#1C1D2F] py-1.5 pl-5 pr-5 w-auto h-fit rounded-r-3xl absolute top-[53%] left-[46%] z-20">
+                  <h1 class="text-white text-sm font-bold ">BIN 4</h1>
+                  <h1 class="text-white text-xs mb-1.5 ">Roxas Hall</h1>
+                  <h1 class="text-white text-sm font-semibold" id="bin_status4b"></h1>
+                </div>
+              <!-- BIN 4 END -->
+
+              <!-- BIN 5 START -->
+                <img id="bin_img5b"
+                    class="w-[5%] absolute bottom-[25%] left-[52%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl"
+                    src="images/sidebar/errorbin.png"
+                    alt=""
+                  />
+                <div id="bin_info5" class="bg-[#FF2400] py-1 pl-5 pr-5 w-auto h-fit rounded-r-3xl absolute bottom-[25%] left-[56%] z-20">
+                  <h1 class="text-white text-sm font-bold ">BIN 5</h1>
+                  <h1 class="text-white text-xs mb-1.5 ">Natividad Hall</h1>
+                  <h1 class="text-white text-sm font-semibold" id="bin_status5b"></h1>
+                </div>
+              <!-- BIN 5 END -->
+            </div>
+              <!-- TODO | MAP BIN END -->
+
+              <!-- TODO | LINE START -->
+              <div id="line-div">  
+              <!-- LINE A START -->
+              <div id="A" hidden class="absolute h-[2.3%] w-[22%] bg-[#F53180] opacity-60 top-[22.5%] left-[1%] rounded-2xl" style="transform: rotate(1deg);"></div>
+              <!-- LINE A END -->
+
+              <!-- LINE B START -->
+              <div id="B" hidden class="absolute h-[2.3%] w-[23%] bg-[#F53180] opacity-60 top-[39%] left-[11.5%] rounded-2xl" style="transform: rotate(86.7deg);"></div>
+              <!-- LINE B END -->
+
+              <!-- LINE C START -->
+              <div id="C" hidden class="absolute h-[2.3%] w-[11.5%] bg-[#F53180] opacity-60 top-[55%] left-[13%] rounded-2xl" style="transform: rotate(-4deg);"></div>
+              <!-- LINE C END -->
+
+              <!-- LINE D START -->
+              <div id="D" hidden class="absolute h-[2.3%] w-[9.5%] bg-[#F53180] opacity-60 top-[61%] left-[9.5%] rounded-2xl" style="transform: rotate(87deg);"></div>
+              <!-- LINE D END -->
+
+              <!-- LINE E START -->
+              <div id="E" hidden class="absolute h-[2.3%] w-[19.5%] bg-[#F53180] opacity-60 top-[66.5%] left-[13.5%] rounded-2xl" style="transform: rotate(-4.5deg);"></div>
+              <!-- LINE E END -->
+
+              <!-- LINE F START -->
+              <div id="F" hidden class="absolute h-[2.3%] w-[9.5%] bg-[#F53180] opacity-60 top-[59.5%] left-[27.5%] rounded-2xl" style="transform: rotate(86deg);"></div>
+              <!-- LINE F END -->
+
+              <!-- LINE G START -->
+              <div id="G" hidden class="absolute h-[2.3%] w-[11.5%] bg-[#F53180] opacity-60 top-[54%] left-[23.5%] rounded-2xl" style="transform: rotate(-4deg);"></div>
+              <!-- LINE G END -->
+
+              <!-- LINE H START -->
+              <div id="H" hidden class="absolute h-[2.3%] w-[22.5%] bg-[#F53180] opacity-60 top-[38%] left-[22.5%] rounded-2xl" style="transform: rotate(88deg);"></div>
+              <!-- LINE H END -->
+
+              <!-- LINE I START -->
+              <div id="I" hidden class="absolute h-[2.3%] w-[12%] bg-[#F53180] opacity-50 top-[22.8%] left-[22%] rounded-2xl" style="transform: rotate(1deg);"></div>
+              <!-- LINE I END -->
+
+              <!-- LINE J START -->
+              <div id="J" hidden class="absolute h-[2.3%] w-[18.5%] bg-[#F53180] opacity-60 top-[23%] left-[33%] rounded-2xl" style="transform: rotate(deg);"></div>
+              <!-- LINE J END -->
+
+              <!-- LINE K START -->
+              <div id="K" hidden class="absolute h-[3.5%] w-[13.2%] bg-[#F53180] opacity-60 top-[8.5%] left-[50%] rounded-2xl" style="transform: rotate(-1deg);"></div>
+              <!-- LINE K END -->
+
+              <!-- LINE L START -->
+              <div id="L" hidden class="absolute h-[2.3%] w-[11%] bg-[#F53180] opacity-60 top-[15.5%] left-[45.3%] rounded-2xl" style="transform: rotate(91.2deg);"></div>
+              <!-- LINE L END -->
+
+              <!-- LINE M START -->
+              <div id="M" hidden class="absolute h-[2.3%] w-[16%] bg-[#F53180] opacity-60 top-[34%] left-[42.5%] rounded-2xl" style="transform: rotate(91.6deg);"></div>
+              <!-- LINE M END -->
+
+              <!-- LINE N START -->
+              <div id="N" hidden class="absolute h-[2.3%] w-[13%] bg-[#F53180] opacity-60 top-[53.5%] left-[43.6%] rounded-2xl" style="transform: rotate(91.8deg);"></div>
+              <!-- LINE N END -->
+
+              <!-- LINE O START -->
+              <div id="O" hidden class="absolute h-[2.3%] w-[9%] bg-[#F53180] opacity-60 top-[68.5%] left-[45.4%] rounded-2xl" style="transform: rotate(91.8deg);"></div>
+              <!-- LINE O END -->
+
+              <!-- LINE P START -->
+              <div id="P" hidden class="absolute h-[2.3%] w-[16.5%] bg-[#F53180] opacity-60 top-[45%] left-[49.5%] rounded-2xl" style="transform: rotate(-1deg);"></div>
+              <!-- LINE P END -->
+
+              <!-- LINE Q START -->
+              <div id="Q" hidden class="absolute h-[2.3%] w-[17%] bg-[#F53180] opacity-60 top-[62.6%] left-[49.1%] rounded-2xl" style="transform: rotate(.3deg);"></div>
+              <!-- LINE Q END -->
+
+              <!-- LINE Q1 START -->
+              <div id="Q1" hidden class="absolute h-[2.3%] w-[4%] bg-[#F53180] opacity-60 top-[64.6%] left-[63.5%] rounded-2xl" style="transform: rotate(90deg);"></div>
+              <!-- LINE Q1 END -->
+
+              <!-- LINE R START -->
+              <div id="R" hidden class="absolute h-[2.3%] w-[16%] bg-[#F53180] opacity-60 top-[55.3%] left-[57.5%] rounded-2xl" style="transform: rotate(90.3deg);"></div>
+              <!-- LINE R END -->
+
+              <!-- LINE S START -->
+              <div id="S" hidden class="absolute h-[2.3%] w-[7.5%] bg-[#F53180] opacity-60 top-[70.4%] left-[61.7%] rounded-2xl" style="transform: rotate(90.3deg);"></div>
+              <!-- LINE S END -->
+
+              <!-- LINE T START -->
+              <div id="T" hidden  class="absolute h-[2.3%] w-[31.5%] bg-[#F53180] opacity-60 top-[66.4%] left-[65%] rounded-2xl" style="transform: rotate(.3deg);"></div>
+              <!-- LINE T END -->
+
+              <!-- LINE U START -->
+              <div id="U" hidden class="absolute h-[2.3%] w-[46%] bg-[#F53180] opacity-60 top-[33.5%] left-[72.4%] rounded-2xl" style="transform: rotate(89deg);"></div>
+              <!-- LINE U END -->
+
+              <!-- LINE V START -->
+              <div id="V" hidden class="absolute h-[2.3%] w-[22%] bg-[#F53180] opacity-60 top-[81%] left-[85%] rounded-2xl" style="transform: rotate(89deg);"></div>
+              <!-- LINE V END -->
+            </div>
+
+
+          
+
+              <!-- LINE 3 START -->
+              <!-- <div class="absolute h-[2.5%] w-[23.5%] bg-[#F53180] opacity-80 top-[50%] left-[11.5%] rounded-2xl" style="transform: rotate(86deg);"></div> -->
+              <!-- LINE 3 END -->
+              <!-- TODO LINE END -->
+
+      
+        </div>
+
+          
+        <!-- TODO MAP SECTION END -->
+      </div>
+      <!-- TODO BODY CONTAINER START -->
+    </div>
+    <!-- TODO MAIN CONTAINER END -->
+  </body>
+  <!-- BODY END -->
+</html>
+<!-- HTML FILE END -->
