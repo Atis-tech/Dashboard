@@ -26,6 +26,9 @@
             for_buttons();
             for_date();
             buttons();
+            remove_previous_path();
+            get_API_data();
+            
             
         });
 
@@ -33,6 +36,7 @@
           var date_now=$.datepicker.formatDate('MM dd, yy', new Date());
           $('#date').html(date_now);
         }
+      
         function for_status(){
             //for conditions
             var bin1 = 0010;
@@ -119,6 +123,7 @@
           }
           reload_page();
         }
+      
         function for_buttons(){
             var previousInfoId;
             $('#button_section button').click(function() {
@@ -193,10 +198,34 @@
             $("#U").removeAttr('hidden');
         });
       }
-      function remove_ways(){
+      
+      function remove_previous_path(){
         $('#line-div').find('div:not([hidden])').each(function(){
           $(this).attr('hidden',true);
         });
+      }
+      
+      function get_API_data(){
+        const gatewayId = 'lora-pi-gateway';
+        const apiUrl = `https://au1.cloud.thethings.network/api/v3/gs/gateways/${gatewayId}/connection/stats`;
+
+        const apiKey = 'FEMNZDNEYFEYA5SQDCFKD4ULFM3APLA36S5Q6VI.EO4MD5DPVSBLWCQC5KBS45F4EWKU5M2VLUSDBV2MR45Q3XADWD5Q';
+        $.ajax({
+          url: apiUrl,
+          type: 'GET',
+          headers: {
+            'Authorization': `Bearer NNSXS.${apiKey}`,
+            'Accept': 'application/json'
+          },
+          success: liveData => {
+            console.log(liveData);
+          },
+          error: error => {
+            console.error(error);
+            console.log(error.message);
+          }
+        });
+       
       }
     </script>
 
