@@ -18,7 +18,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js" integrity="sha256-xLD7nhI62fcsEZK2/v8LsBcb4lG7dgULkuXoXB/j91c=" crossorigin="anonymous"></script>
 
-    <!-- MAIN SCRIPT -->
+    <!--MAIN SCRIPT-->
     <script>
         $(document).ready(function(){
             for_status();
@@ -26,9 +26,6 @@
             for_buttons();
             for_date();
             buttons();
-            remove_previous_path();
-            get_API_data();
-            
             
         });
 
@@ -36,7 +33,6 @@
           var date_now=$.datepicker.formatDate('MM dd, yy', new Date());
           $('#date').html(date_now);
         }
-      
         function for_status(){
             //for conditions
             var bin1 = 0010;
@@ -123,10 +119,9 @@
           }
           reload_page();
         }
-      
         function for_buttons(){
             var previousInfoId;
-            $('#button_section button').click(function() {
+            $('#try a').click(function() {
             var infoId = $(this).attr('data-value');
 
             // Check if the clicked button corresponds to the currently open container
@@ -198,34 +193,10 @@
             $("#U").removeAttr('hidden');
         });
       }
-      
-      function remove_previous_path(){
+      function remove_ways(){
         $('#line-div').find('div:not([hidden])').each(function(){
           $(this).attr('hidden',true);
         });
-      }
-      
-      function get_API_data(){
-        const gatewayId = 'lora-pi-gateway';
-        const apiUrl = `https://au1.cloud.thethings.network/api/v3/gs/gateways/${gatewayId}/connection/stats`;
-
-        const apiKey = 'FEMNZDNEYFEYA5SQDCFKD4ULFM3APLA36S5Q6VI.EO4MD5DPVSBLWCQC5KBS45F4EWKU5M2VLUSDBV2MR45Q3XADWD5Q';
-        $.ajax({
-          url: apiUrl,
-          type: 'GET',
-          headers: {
-            'Authorization': `Bearer NNSXS.${apiKey}`,
-            'Accept': 'application/json'
-          },
-          success: liveData => {
-            console.log(liveData);
-          },
-          error: error => {
-            console.error(error);
-            console.log(error.message);
-          }
-        });
-       
       }
     </script>
 
@@ -257,128 +228,30 @@
     <!-- TODO MAIN CONTAINER START -->
     <div class="flex items-start justify-center w-full h-full bg-[#1C1D2F]">
       <!-- TODO SIDE BAR SECTION START -->
-      <div class="bg-[#2F304D] w-60 h-screen lg:w-80">
-        <!-- LOGO SECTION START -->
-        <div class="h-28 w-full flex items-center justify-center space-x-4 px-4  border-color-white">
-          <div>
-            <img class="w-16" src="images/sidebar/atislogo.png" alt=""/>
-          </div>
-          <div class="md:hidden lg:flex flex-col">
-            <h1 class="text-white" style="font-size: 10px">AUTOMATION TECHNOLOGIES</h1>
-            <h1 class="text-white" style="font-size: 10px">INFORMATION SYSTEM</h1>
-          </div>
-        </div>
-        <!-- LOGO SECTION END -->
-
-
-        <!-- BIN INFORMATION START -->
-        <div class="mt-[20%] w-full h-fit flex flex-col justify-start items-center space-y-1.5">
-          <!-- BIN INFORMATION LOGO START -->
-          <div class="w-full h-20 md:flex-col lg:flex-row md:space-y-2 md:mb-3 flex items-center justify-center px-2">
-            <img src="images/sidebar/bin-information.png" alt="">
-            <h1 class="text-white font-semibold text-sm">BIN INFORMATION:</h1>
-          </div>
-          <!-- BIN INFORMATION LOGO END -->
-          <div class="w-full" id="button_section">
-          <!-- 1ST BIN STATUS START -->
-          <div class="w-full">
-            <button type="button"  class="btn btn-outline-secondary w-full" id="bin_btn1" data-value="1"> 
-              <div class="w-full h-20 bg-[#5F5D7C] flex items-center justify-between lg:px-5 md:px-3" id="bin_bg1">
-                <div class="flex flex-col">
-                  <h1 class="text-white font-semibold">BIN 1</h1>
-                  <h1 class="text-white text-xs font-light">Alvarado Hall</h1>
-                </div>
-                <div class="flex items-center">
-                  <h1 class="text-sm text-white font-semibold md:hidden lg:flex" id="bin_status1"></h1>
-                  <img class="lg:w-12 md:w-10" src="images/sidebar/yellowbin.png" alt=""  id="bin_img1"/>
-                </div>
-              </div>
-            </button>
-          </div>
-          <!-- 1ST BIN STATUS END -->
-
-          <!-- 2ND BIN STATUS START -->
-          <div class="w-full">
-            <button type="button"  class="btn btn-outline-secondary w-full" id="bin_btn2" data-value="2"> 
-              <div class="w-full h-20 bg-[#5F5D7C] flex items-center justify-between lg:px-5 md:px-3" id="bin_bg2">
-                <div class="flex flex-col">
-                  <h1 class="text-white font-semibold">BIN 2</h1>
-                  <h1 class="text-white text-xs font-light">Pimentel Hall</h1>
-                </div>
-                <div class="flex items-center">
-                  <h1 class="text-sm text-white font-semibold md:hidden lg:flex" id="bin_status2"></h1>
-                  <img class="lg:w-12 md:w-10" src="images/sidebar/bluebin.png" alt=""  id="bin_img2"/>
-                </div>
-              </div>
-            </button>
-          </div>
-          <!-- 2ND BIN STATUS END -->
-
-          <!-- 3RD BIN STATUS START -->
-          <div class="w-full">
-            <button type="button"  class="btn btn-outline-secondary w-full" id="bin_btn3" data-value="3"> 
-              <div class="w-full h-20 bg-[#5F5D7C] flex items-center justify-between lg:px-5 md:px-3" id="bin_bg3">
-                <div class="flex flex-col">
-                  <h1 class="text-white font-semibold">BIN 3</h1>
-                  <h1 class="text-white text-xs font-light">CHTML Bldg</h1>
-                </div>
-                <div class="flex items-center ">
-                  <h1 class="text-sm text-white font-semibold md:hidden lg:flex" id="bin_status3"></h1>
-                  <img class="lg:w-12 md:w-10" src="images/sidebar/emptybin.png" alt=""  id="bin_img3"/>
-                </div>
-              </div>
-            </button>
-          </div>
-          <!-- 3RD BIN STATUS END -->
-
-          <!-- 4TH BIN STATUS START -->
-          <div class="w-full">
-            <button type="button"  class="btn btn-outline-secondary w-full" id="bin_btn4" data-value="4"> 
-              <div class="w-full h-20 bg-[#5F5D7C] flex items-center justify-between lg:px-5 md:px-3" id="bin_bg4">
-                <div class="flex flex-col">
-                  <h1 class="text-white font-semibold">BIN 4</h1>
-                  <h1 class="text-white text-xs font-light">Roxas Hall</h1>
-                </div>
-                <div class="flex items-center ">
-                  <h1 class="text-sm text-white font-semibold md:hidden lg:flex" id="bin_status4"></h1>
-                  <img class="lg:w-12 md:w-10" src="images/sidebar/fullbin.png" alt="" id="bin_img4"/>
-                </div>
-              </div>
-            </button>
-          </div>
-          <!-- 4TH BIN STATUS END -->
-
-          <!-- 5TH BIN STATUS START -->
-          <div class="w-full">
-            <button type="button"  class="btn btn-outline-secondary w-full" id="bin_btn5" data-value="5"> 
-              <div class="w-full h-20 bg-[#B31B1B] flex items-center justify-between lg:px-5 md:px-3" id="bin_bg5">
-                <div class="flex flex-col">
-                  <h1 class="text-white font-semibold">BIN 5</h1>
-                  <h1 class="text-white text-xs font-light">Natividad Hall</h1>
-                </div>
-                <div class="flex items-center">
-                  <h1 class="text-sm text-white font-semibold md:hidden lg:flex" id="bin_status5"></h1>
-                  <img class="lg:w-12 md:w-10" src="images/sidebar/errorbin.png" alt="" id="bin_img5"/>
-                </div>
-              </div>
-            </button>
-          </div>
-          <!-- 5TH BIN STATUS END -->
-        </div>
-        </div>
-        <!-- BIN INFROMATION END -->
-      </div>
+     
       <!-- TODO SIDE BAR SECTION END -->
 
       <!-- TODO BODY CONTAINER START -->
       <div class="flex flex-col w-full">
         <!-- TODO NAV BAR SECTION START -->
-        <div class="w-full h-28  border-color-white">
+        <div class="w-full h-30 mt-3  border-color-white ">
           <div
-            class="flex w-full h-full justify-end items-center md:space-x-6 lg:space-x-14 md:pr-8 lg:pr-16"
+            class="flex w-full h-full justify-end items-center md:space-x-6 lg:space-x-14 md:pr-8 lg:pr-16 "
           >
-            <div class="flex space-x-4">
-              <div>
+          <!-- LOGO SECTION START -->
+        <div class="h-28 w-full flex items-center justify-start space-x-4 px-5  border-color-white">
+          <div>
+            <img class="w-16" src="images/sidebar/atislogo.png" alt=""/>
+          </div>
+          <div class="xs:hidden sm:hidden md:hidden lg:flex flex-col">
+            <h1 class="text-white" style="font-size: 10px">AUTOMATION TECHNOLOGIES</h1>
+            <h1 class="text-white" style="font-size: 10px">INFORMATION SYSTEM</h1>
+          </div>
+        </div>
+        <!-- LOGO SECTION END -->
+          <div class="flex space-x-[8%] w-full justify-end flex-shrink"> 
+            <div class="flex space-x-4 ">
+              <div class="flex h-full justify-center items-center">
                 <img
                   class="md:w-8 lg:w-10"
                   src="images/navbar/location.png"
@@ -393,8 +266,8 @@
               </div>
             </div>
 
-            <div class="flex space-x-4">
-              <div>
+            <div class="flex space-x-4 ">
+              <div class="flex h-full justify-center items-center">
                 <img
                   class="md:w-8 lg:w-10"
                   src="images/navbar/date.png"
@@ -407,6 +280,7 @@
               </div>
             </div>
           </div>
+          </div>
         </div>
         <!-- TODO NAVBAR SECTION END -->
 
@@ -418,76 +292,92 @@
             <div> 
               <img
                 class="w-[1150px]"
-                src="images/map/Map.png"
+                src="images/map/Map1.png"
                 alt=""
               />
             </div>
             <!-- BULSU MAP END -->
 
             <!-- TODO | MAP BIN START -->
-            <div class="try">
+            <div class="try" id="try">
             <!-- BIN 1 START -->
-            <img id="bin_img1b" class="w-[5%] absolute top-[14.5%] left-[13.5%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl" src="images/sidebar/yellowbin.png" alt="img_bin1"/>
-            <div id="bin_info1" class="bg-[#1C1D2F] py-1.5 pl-5 pr-5 w-auto h-fit rounded-r-3xl absolute top-[14.5%] left-[17.5%] z-20">
-                <h1 class="text-white text-sm font-bold ">BIN 1</h1>
-                <h1 class="text-white text-xs mb-1.5 ">Alvarado Hall</h1>
-                <h1 class="text-white text-sm font-semibold" id="bin_status1b"></h1>
-            </div>
+            <a href="#" id="bin_btn1" data-value="1"> 
+            <img id="bin_img1b" class="w-[5%] absolute top-[14.5%] left-[17%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl" src="images/sidebar/yellowbin.png" alt="img_bin1"/> 
+            
+          </a>
             <!-- BIN 1 END -->
 
             <!-- BIN 2 START -->
+            <a href="#" id="bin_btn2" data-value="2">
               <img id="bin_img2b"
-                  class="w-[5%] absolute top-[58%] left-[16%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl"
+                  class="w-[5%] absolute top-[57%] left-[19%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl"
                   src="images/sidebar/bluebin.png"
                   alt=""
                 />
-              <div id="bin_info2" class="bg-[#1C1D2F] py-1.5 pl-5 pr-5 w-auto h-fit rounded-r-3xl absolute top-[58%] left-[20%] z-20">
-                <h1 class="text-white text-sm font-bold ">BIN 2</h1>
-                <h1 class="text-white text-xs mb-1.5 ">Pimentel Hall</h1>
-                <h1 class="text-white text-sm font-semibold" id="bin_status2b"></h1>
-              </div>
+              
+              </a>
             <!-- BIN 2 END -->
 
             <!-- BIN 3 START -->
+            <a href="#" id="bin_btn3" data-value="3">
               <img id="bin_img3b"
-                  class="w-[5%] absolute top-[10%] left-[47%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl"
+                  class="w-[5%] absolute top-[8%] left-[45%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl"
                   src="images/sidebar/emptybin.png"
                   alt=""
                 />
-              <div id="bin_info3" class="bg-[#1C1D2F] py-1.5 pl-5 pr-5 w-auto h-fit rounded-r-3xl absolute top-[10%] left-[51%] z-20">
-                <h1 class="text-white text-sm font-bold ">BIN 3</h1>
-                <h1 class="text-white text-xs mb-1.5 ">CHTML Bldg</h1>
-                <h1 class="text-white text-sm font-semibold" id="bin_status3b"></h1>
-              </div>
+              
+            </a>
               <!-- BIN 3 END -->
 
               <!-- BIN 4 START -->
+              <a href="#" id="bin_btn4" data-value="4">
                 <img id="bin_img4b"
-                    class="w-[5%] absolute top-[53%] left-[42%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl"
+                    class="w-[5%] absolute top-[55%] left-[44%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl"
                     src="images/sidebar/fullbin.png"
                     alt="" 
                   />
-                <div id="bin_info4" class="bg-[#1C1D2F] py-1.5 pl-5 pr-5 w-auto h-fit rounded-r-3xl absolute top-[53%] left-[46%] z-20">
-                  <h1 class="text-white text-sm font-bold ">BIN 4</h1>
-                  <h1 class="text-white text-xs mb-1.5 ">Roxas Hall</h1>
-                  <h1 class="text-white text-sm font-semibold" id="bin_status4b"></h1>
-                </div>
+                
+              </a>
               <!-- BIN 4 END -->
 
               <!-- BIN 5 START -->
+              <a href="#" id="bin_btn5" data-value="5">
                 <img id="bin_img5b"
-                    class="w-[5%] absolute bottom-[25%] left-[52%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl"
+                    class="w-[5%] absolute bottom-[25%] left-[59%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl"
                     src="images/sidebar/errorbin.png"
                     alt=""
                   />
-                <div id="bin_info5" class="bg-[#FF2400] py-1 pl-5 pr-5 w-auto h-fit rounded-r-3xl absolute bottom-[25%] left-[56%] z-20">
-                  <h1 class="text-white text-sm font-bold ">BIN 5</h1>
-                  <h1 class="text-white text-xs mb-1.5 ">Natividad Hall</h1>
-                  <h1 class="text-white text-sm font-semibold" id="bin_status5b"></h1>
-                </div>
+               
+              </a>
               <!-- BIN 5 END -->
             </div>
               <!-- TODO | MAP BIN END -->
+          
+              <!-- TODO BIN STATUS START -->
+              <div>
+                  <h1 class="text-[8px] xs:text-xs text-light text-white absolute top-[14.5%] left-[67.5%] z-10">
+                    BIN ID
+                  </h1>
+                    <h1 class="lg:text-[30px] md:text-[24px] sm:text-[18px] text-bold text-white absolute top-[16%] left-[67.5%] z-10">
+                      BIN 3
+                    </h1>
+
+                    <h1 class="text-[8px] xs:text-xs text-extralight text-white absolute top-[14.5%] left-[78.9%] z-10">
+                      BIN LOCATION
+                    </h1>
+                    <h1 class="lg:text-[13px] md:text-[10px] sm:text-[8px] lg:pt-0 md:pt-0 sm:pt-1 text-bold text-white absolute top-[16.5%] left-[79%] z-10">
+                      ALVARADO HALL
+                    </h1>
+                  <img id="bin_img3b"
+                      class="w-[9%] absolute top-[24%] left-[70%] z-10"
+                      src="images/sidebar/emptybin.png"
+                      alt=""
+                    />
+                <h1 class="lg:text-[25px] md:text-[20px] sm:text-[14px] text-bold text-white absolute top-[28.5%] left-[79%] z-10">
+                  EMPTY
+                </h1>
+              </div>
+              <!-- TODO BIN STATUS END -->
 
               <!-- TODO | LINE START -->
               <div id="line-div">  
