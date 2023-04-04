@@ -33,13 +33,14 @@
           var date_now=$.datepicker.formatDate('MM dd, yy', new Date());
           $('#date').html(date_now);
         }
-        function for_status(){
-            //for conditions
-            var bin1 = 0010;
-            var bin2 = 0100;
-            var bin3 = 0100;
-            var bin4 = 0001;
-            var bin5 = 0010;
+        
+        function bin_stat(){
+          //for conditions
+            var bin1 = 1;
+            var bin2 = 2;
+            var bin3 = 3;
+            var bin4 = 4;
+            var bin5 = 5;
 
             //types of bin status
             var stat1=0001; //half full
@@ -54,46 +55,34 @@
             var statd="FULL";
             var state="ERROR";
 
+            var statid1="BIN 1";
+            var statid2="BIN 2";
+            var statid3="BIN 3";
+            var statid4="BIN 4";
+            var statid5="BIN 5";
+
+            var statloc1="ALVARADO HALL";
+            var statloc1="PIMENTEL HALL";
+            var statloc1="CHTM BLDG";
+            var statloc1="ROXAS HALL";
+            var statloc1="NATIVIDAD";
+
             //bin image assets
-            var hf_img="images/sidebar/yellowbin.png";
+            var hf_img="images/sidebar/bluebin.png";
             var min_img="images/sidebar/bluebin.png";
             var emp_img="images/sidebar/emptybin.png";
             var full_img="images/sidebar/fullbin.png";
             var err_img="images/sidebar/errorbin.png"
 
-            //button background color
-            var bin_error = {'background-color':'#FF2400'};
-            var bin_normal = {'background-color':'#5F5D7C'};
-            var bin_normali = {'background':'#22223B'};
 
-           // Define an array of bin elements
-            const bins = [
-              {id:'#bin_status1', idb:'#bin_status1b', img:'#bin_img1', imgb:'#bin_img1b', bg:'#bin_bg1', bgi:'#bin_info1', value: bin1},  
-              {id:'#bin_status2', idb:'#bin_status2b', img:'#bin_img2', imgb:'#bin_img2b', bg:'#bin_bg2', bgi:'#bin_info2', value: bin2},  
-              {id:'#bin_status3', idb:'#bin_status3b', img:'#bin_img3', imgb:'#bin_img3b', bg:'#bin_bg3', bgi:'#bin_info3', value: bin3},  
-              {id:'#bin_status4', idb:'#bin_status4b', img:'#bin_img4', imgb:'#bin_img4b', bg:'#bin_bg4', bgi:'#bin_info4', value: bin4}, 
-              {id:'#bin_status5', idb:'#bin_status5b', img:'#bin_img5', imgb:'#bin_img5b', bg:'#bin_bg5', bgi:'#bin_info5', value: bin5}
-            ];
+            if (stat1 == bin1 ) { 
+              $("#bin-stat").html(stata);
+              $("#bin-img").attr('src', hf_img);
+              
+            } else if (stat2 == bin2 ) { 
+              $("#bin-stat").html(statb);
+              $("#bin-img").attr('src', min_img);
 
-          // Loop over the bins and set the values accordingly
-          for (let i = 0; i < bins.length; i++) {
-            const bin = bins[i];
-            const value = bin.value;
-
-            if (value == stat1) { 
-              $(bin.id).html(stata);
-              $(bin.idb).html(stata);
-              $(bin.img).attr('src', hf_img);
-              $(bin.imgb).attr('src', hf_img);
-              $(bin.bg).css(bin_normal);
-              $(bin.bgi).css(bin_normali);
-            } else if (value == stat2) {
-              $(bin.id).html(statb);
-              $(bin.idb).html(statb);
-              $(bin.img).attr('src', min_img);
-              $(bin.imgb).attr('src', min_img);
-              $(bin.bg).css(bin_normal);
-              $(bin.bgi).css(bin_normali);
             } else if (value == stat3) {
               $(bin.id).html(statc);
               $(bin.idb).html(statc);
@@ -117,6 +106,54 @@
               $(bin.bgi).css(bin_error);
             }
           }
+        
+
+        function for_status(){
+           
+
+           // Define an array of bin elements
+           $('#bin_btn1').click(function(){
+             var loc1 = $(this).attr('data-loc');
+             var id1 = $(this).attr('data-id');
+             $('#bin-loc').html(loc1);
+             $('#bin-id').html(id1);
+             bin_stat();
+           });
+
+           $('#bin_btn2').click(function(){
+             var loc2 = $(this).attr('data-loc');
+             var id2 = $(this).attr('data-id');
+             $('#bin-loc').html(loc2);
+             $('#bin-id').html(id2);
+             bin_stat();
+           });
+           $('#bin_btn3').click(function(){
+             var loc3 = $(this).attr('data-loc');
+             var id3 = $(this).attr('data-id');
+             $('#bin-loc').html(loc3);
+             $('#bin-id').html(id3);
+             bin_stat();
+           });
+
+           $('#bin_btn4').click(function(){
+             var loc4 = $(this).attr('data-loc');
+             var id4 = $(this).attr('data-id');
+             $('#bin-loc').html(loc4);
+             $('#bin-id').html(id4);
+             bin_stat();
+           });
+
+           $('#bin_btn5').click(function(){
+             var loc5 = $(this).attr('data-loc');
+             var id5 = $(this).attr('data-id');
+             $('#bin-loc').html(loc5);
+             $('#bin-id').html(id5);
+             bin_stat();
+           });
+
+
+          // Loop over the bins and set the values accordingly
+         
           reload_page();
         }
         function for_buttons(){
@@ -285,31 +322,57 @@
         <!-- TODO NAVBAR SECTION END -->
 
         <!-- TODO MAP SECTION START -->
-        <div class="mt-[1%] p-8 w-full h-full flex items-center justify-center">
+        <div class=" p-8 w-full h-full flex items-center justify-center">
           <div class="w-fit h-fit  relative">
 
             <!-- BULSU MAP START -->
             <div> 
               <img
                 class="w-[1150px]"
-                src="images/map/Map1.png"
+                src="images/map/MAP1.png"
                 alt=""
               />
             </div>
             <!-- BULSU MAP END -->
 
+             <!-- TODO BIN STATUS START -->
+             <div>
+              <h1 class="text-[8px] xs:text-xs text-light text-white absolute top-[14.5%] left-[67.5%] z-10">
+                BIN ID
+              </h1>
+                <h1 class="lg:text-[26px] md:text-[23px] sm:text-[18px] text-bold text-white absolute top-[16%] left-[67.5%] z-10" id="bin-id">
+                  BIN 3
+                </h1>
+
+                <h1 class="text-[8px] xs:text-xs text-extralight text-white absolute top-[14.5%] left-[78.9%] z-10">
+                  BIN LOCATION
+                </h1>
+                <h1 class="w-2 lg:text-[18px] md:text-[12px] sm:text-[8px] lg:pt-0 md:pt-0 sm:pt-1 text-bold text-white absolute top-[16.5%] left-[79%] z-10" id="bin-loc">
+                  NATIVIDAD HALL
+                </h1>
+              <img
+                  class="w-[9%] absolute top-[24%] left-[66.5%] z-10" id="bin-img"
+                  src="images/sidebar/emptybin.png"
+                  alt=""
+                />
+            <h1 class=" lg:text-[18px] md:text-[13px] sm:text-[12px] text-bold text-white absolute top-[28.5%] left-[79%] z-10" id="bin-stat">
+              ERROR
+            </h1>
+          </div>
+          <!-- TODO BIN STATUS END -->
+
             <!-- TODO | MAP BIN START -->
             <div class="try" id="try">
             <!-- BIN 1 START -->
-            <a href="#" id="bin_btn1" data-value="1"> 
-            <img id="bin_img1b" class="w-[5%] absolute top-[14.5%] left-[17%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl" src="images/sidebar/yellowbin.png" alt="img_bin1"/> 
+            <a href="#b1" id="bin_btn1" data-value="1" data-loc="ALVARADO HALL" data-id="BIN 1"> 
+            <img id="bin_img1b b1" class="w-[5%] absolute top-[14.5%] left-[17%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl" src="images/sidebar/yellowbin.png" alt="img_bin1"/> 
             
           </a>
             <!-- BIN 1 END -->
 
             <!-- BIN 2 START -->
-            <a href="#" id="bin_btn2" data-value="2">
-              <img id="bin_img2b"
+            <a href="#b2" id="bin_btn2" data-value="2" data-loc="PIMENTEL HALL" data-id="BIN 2">
+              <img id="bin_img2b b2"
                   class="w-[5%] absolute top-[57%] left-[19%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl"
                   src="images/sidebar/bluebin.png"
                   alt=""
@@ -319,8 +382,8 @@
             <!-- BIN 2 END -->
 
             <!-- BIN 3 START -->
-            <a href="#" id="bin_btn3" data-value="3">
-              <img id="bin_img3b"
+            <a href="#b3" id="bin_btn3" data-value="3" data-loc="CHTM BUILDING" data-id="BIN 3">
+              <img id="bin_img3b b3"
                   class="w-[5%] absolute top-[8%] left-[45%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl"
                   src="images/sidebar/emptybin.png"
                   alt=""
@@ -330,8 +393,8 @@
               <!-- BIN 3 END -->
 
               <!-- BIN 4 START -->
-              <a href="#" id="bin_btn4" data-value="4">
-                <img id="bin_img4b"
+              <a href="#b4" id="bin_btn4" data-value="4" data-loc="ROXAS HALL" data-id="BIN 4">
+                <img id="bin_img4b b4"
                     class="w-[5%] absolute top-[55%] left-[44%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl"
                     src="images/sidebar/fullbin.png"
                     alt="" 
@@ -341,8 +404,8 @@
               <!-- BIN 4 END -->
 
               <!-- BIN 5 START -->
-              <a href="#" id="bin_btn5" data-value="5">
-                <img id="bin_img5b"
+              <a href="#b5" id="bin_btn5" data-value="5" data-loc="NATIVIDAD HALL" data-id="BIN 5">
+                <img id="bin_img5b b5"
                     class="w-[5%] absolute bottom-[25%] left-[59%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl"
                     src="images/sidebar/errorbin.png"
                     alt=""
@@ -353,7 +416,6 @@
             </div>
               <!-- TODO | MAP BIN END -->
           
-            
 
               <!-- TODO | LINE START -->
               <div id="line-div">  
