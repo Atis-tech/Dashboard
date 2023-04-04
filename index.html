@@ -21,9 +21,9 @@
     <!--MAIN SCRIPT-->
     <script>
         $(document).ready(function(){
-            for_status();
+            bin_status();
             setInterval($('.try div').hide(),360000);
-            for_buttons();
+            btn_switch();
             for_date();
             buttons();
             
@@ -34,20 +34,20 @@
           $('#date').html(date_now);
         }
         
-        function bin_stat(){
-          //for conditions
+        function bin_status(){
+          //Changing depending to API
             var bin1 = 1;
-            var bin2 = 2;
+            var bin2 = 3;
             var bin3 = 3;
             var bin4 = 4;
             var bin5 = 5;
 
             //types of bin status
-            var stat1=0001; //half full
-            var stat2=0010; //minimal
-            var stat3=0011; //empty
-            var stat4=0100; //full
-            var stat5=0101; //error
+            var stat1=1; //half full
+            var stat2=2; //minimal
+            var stat3=3; //empty
+            var stat4=4; //full
+            var stat5=5; //error
 
             var stata="HALF-FULL";
             var statb="MINIMAL";
@@ -55,108 +55,45 @@
             var statd="FULL";
             var state="ERROR";
 
-            var statid1="BIN 1";
-            var statid2="BIN 2";
-            var statid3="BIN 3";
-            var statid4="BIN 4";
-            var statid5="BIN 5";
-
-            var statloc1="ALVARADO HALL";
-            var statloc1="PIMENTEL HALL";
-            var statloc1="CHTM BLDG";
-            var statloc1="ROXAS HALL";
-            var statloc1="NATIVIDAD";
-
             //bin image assets
-            var hf_img="images/sidebar/bluebin.png";
+            var hf_img="images/sidebar/yellowbin.png";
             var min_img="images/sidebar/bluebin.png";
             var emp_img="images/sidebar/emptybin.png";
             var full_img="images/sidebar/fullbin.png";
             var err_img="images/sidebar/errorbin.png"
-
-
-            if (stat1 == bin1 ) { 
-              $("#bin-stat").html(stata);
-              $("#bin-img").attr('src', hf_img);
-              
-            } else if (stat2 == bin2 ) { 
-              $("#bin-stat").html(statb);
-              $("#bin-img").attr('src', min_img);
-
-            } else if (value == stat3) {
-              $(bin.id).html(statc);
-              $(bin.idb).html(statc);
-              $(bin.img).attr('src', emp_img);
-              $(bin.imgb).attr('src', emp_img);
-              $(bin.bg).css(bin_normal);
-              $(bin.bgi).css(bin_normali);
-            } else if (value == stat4) {
-              $(bin.id).html(statd);
-              $(bin.idb).html(statd);
-              $(bin.img).attr('src', full_img);
-              $(bin.imgb).attr('src', full_img);
-              $(bin.bg).css(bin_normal);
-              $(bin.bgi).css(bin_normali);
-            } else if (value == stat5) {
-              $(bin.id).html(state);
-              $(bin.idb).html(state);
-              $(bin.img).attr('src', err_img);
-              $(bin.imgb).attr('src', err_img);
-              $(bin.bg).css(bin_error);
-              $(bin.bgi).css(bin_error);
-            }
-          }
-        
-
-        function for_status(){
-           
-
-           // Define an array of bin elements
-           $('#bin_btn1').click(function(){
-             var loc1 = $(this).attr('data-loc');
-             var id1 = $(this).attr('data-id');
-             $('#bin-loc').html(loc1);
-             $('#bin-id').html(id1);
-             bin_stat();
-           });
-
-           $('#bin_btn2').click(function(){
-             var loc2 = $(this).attr('data-loc');
-             var id2 = $(this).attr('data-id');
-             $('#bin-loc').html(loc2);
-             $('#bin-id').html(id2);
-             bin_stat();
-           });
-           $('#bin_btn3').click(function(){
-             var loc3 = $(this).attr('data-loc');
-             var id3 = $(this).attr('data-id');
-             $('#bin-loc').html(loc3);
-             $('#bin-id').html(id3);
-             bin_stat();
-           });
-
-           $('#bin_btn4').click(function(){
-             var loc4 = $(this).attr('data-loc');
-             var id4 = $(this).attr('data-id');
-             $('#bin-loc').html(loc4);
-             $('#bin-id').html(id4);
-             bin_stat();
-           });
-
-           $('#bin_btn5').click(function(){
-             var loc5 = $(this).attr('data-loc');
-             var id5 = $(this).attr('data-id');
-             $('#bin-loc').html(loc5);
-             $('#bin-id').html(id5);
-             bin_stat();
-           });
-
+            
+            const bins = [
+              {btn:'#bin_btn1', img:'#bin_img1', value: bin1},  
+              {btn:'#bin_btn2', img:'#bin_img2', value: bin2},  
+              {btn:'#bin_btn3', img:'#bin_img3', value: bin3}, 
+              {btn:'#bin_btn4', img:'#bin_img4', value: bin4}, 
+              {btn:'#bin_btn5', img:'#bin_img5', value: bin5}, 
+            ];
 
           // Loop over the bins and set the values accordingly
-         
-          reload_page();
+          for (let i = 0; i < bins.length; i++) {
+            const bin = bins[i];
+            const value = bin.value;
+
+            if (value == stat1) { 
+              $(bin.btn).attr('data-stat',stata);
+              $(bin.img).attr('src', hf_img);
+            } else if (value == stat2) {
+              $(bin.btn).attr('data-stat',statb);
+              $(bin.img).attr('src', min_img);
+            } else if (value == stat3) {
+              $(bin.btn).attr('data-stat',statc);
+              $(bin.img).attr('src', emp_img);
+            } else if (value == stat4) {
+              $(bin.btn).attr('data-stat',statd);
+              $(bin.img).attr('src', full_img);
+            } else if (value == stat5) {
+              $(bin.btn).attr('data-stat',state);
+              $(bin.img).attr('src', err_img);
+            }
         }
-        function for_buttons(){
+      }
+        function btn_switch(){
             var previousInfoId;
             $('#try a').click(function() {
             var infoId = $(this).attr('data-value');
@@ -168,7 +105,7 @@
 
             // Hide the currently open container if it exists
             if (previousInfoId) {
-                remove_ways();
+                remove_previous_path();
                 $('#bin_info' + previousInfoId).toggle("slide", {direction: "left"}, 1000);  
             }
 
@@ -188,6 +125,14 @@
 
       function buttons(){
         $('#bin_btn1').click(function(){
+            var loc1 = $(this).attr('data-loc');
+            var id1 = $(this).attr('data-id');
+            var img1 = $('#bin_img1').attr('src');
+            var stat1 = $(this).attr('data-stat');
+            $('#bin_loc').html(loc1);
+            $('#bin_id').html(id1);
+            $('#bin_img').attr('src',img1);
+            $('#bin_stat').html(stat1);
             $("#I").removeAttr('hidden');
             $("#J").removeAttr('hidden');
             $("#M").removeAttr('hidden');
@@ -198,6 +143,14 @@
             $("#U").removeAttr('hidden');
         });
         $('#bin_btn2').click(function(){
+            var loc2 = $(this).attr('data-loc');
+            var id2 = $(this).attr('data-id');
+            var img2 = $('#bin_img2').attr('src');
+            var stat2 = $(this).attr('data-stat');
+            $('#bin_loc').html(loc2);
+            $('#bin_id').html(id2);
+            $('#bin_img').attr('src',img2);
+            $('#bin_stat').html(stat2);
             $('#G').removeAttr('hidden');
             $('#H').removeAttr('hidden');
             $("#J").removeAttr('hidden');
@@ -209,6 +162,14 @@
             $("#U").removeAttr('hidden');
         });
         $('#bin_btn3').click(function(){
+            var loc3 = $(this).attr('data-loc');
+            var id3 = $(this).attr('data-id');
+            var img3 = $('#bin_img3').attr('src');
+            var stat3 = $(this).attr('data-stat');
+            $('#bin_loc').html(loc3);
+            $('#bin_id').html(id3);
+            $('#bin_img').attr('src',img3);
+            $('#bin_stat').html(stat3);
             $("#L").removeAttr('hidden');
             $("#M").removeAttr('hidden');
             $("#M").removeAttr('hidden');
@@ -219,18 +180,33 @@
             $("#U").removeAttr('hidden');
         });
         $('#bin_btn4').click(function(){
+            var loc4 = $(this).attr('data-loc');
+            var id4 = $(this).attr('data-id');
+            var img4 = $('#bin_img4').attr('src');
+            var stat4 = $(this).attr('data-stat');
+            $('#bin_loc').html(loc4);
+            $('#bin_id').html(id4);
+            $('#bin_img').attr('src',img4);
+            $('#bin_stat').html(stat4);
             $("#Q").removeAttr('hidden');
             $("#Q1").removeAttr('hidden');
             $("#T").removeAttr('hidden');
             $("#U").removeAttr('hidden');
         });
         $('#bin_btn5').click(function(){
-            
+            var loc5 = $(this).attr('data-loc');
+            var id5 = $(this).attr('data-id');
+            var img5 = $('#bin_img5').attr('src');
+            var stat5 = $(this).attr('data-stat');
+            $('#bin_loc').html(loc5);
+            $('#bin_id').html(id5);
+            $('#bin_img').attr('src',img5);
+            $('#bin_stat').html(stat5);
             $("#T").removeAttr('hidden');
             $("#U").removeAttr('hidden');
         });
       }
-      function remove_ways(){
+      function remove_previous_path(){
         $('#line-div').find('div:not([hidden])').each(function(){
           $(this).attr('hidden',true);
         });
@@ -340,22 +316,22 @@
               <h1 class="text-[8px] xs:text-xs text-light text-white absolute top-[14.5%] left-[67.5%] z-10">
                 BIN ID
               </h1>
-                <h1 class="lg:text-[26px] md:text-[23px] sm:text-[18px] text-bold text-white absolute top-[16%] left-[67.5%] z-10" id="bin-id">
+                <h1 class="lg:text-[26px] md:text-[23px] sm:text-[18px] text-bold text-white absolute top-[16%] left-[67.5%] z-10" id="bin_id">
                   BIN 3
                 </h1>
 
                 <h1 class="text-[8px] xs:text-xs text-extralight text-white absolute top-[14.5%] left-[78.9%] z-10">
                   BIN LOCATION
                 </h1>
-                <h1 class="w-2 lg:text-[18px] md:text-[12px] sm:text-[8px] lg:pt-0 md:pt-0 sm:pt-1 text-bold text-white absolute top-[16.5%] left-[79%] z-10" id="bin-loc">
+                <h1 class="w-2 lg:text-[18px] md:text-[12px] sm:text-[8px] lg:pt-0 md:pt-0 sm:pt-1 text-bold text-white absolute top-[16.5%] left-[79%] z-10" id="bin_loc">
                   NATIVIDAD HALL
                 </h1>
               <img
-                  class="w-[9%] absolute top-[24%] left-[66.5%] z-10" id="bin-img"
+                  class="w-[9%] absolute top-[24%] left-[66.5%] z-10" id="bin_img"
                   src="images/sidebar/emptybin.png"
                   alt=""
                 />
-            <h1 class=" lg:text-[18px] md:text-[13px] sm:text-[12px] text-bold text-white absolute top-[28.5%] left-[79%] z-10" id="bin-stat">
+            <h1 class=" lg:text-[18px] md:text-[13px] sm:text-[12px] text-bold text-white absolute top-[28.5%] left-[79%] z-10" id="bin_stat">
               ERROR
             </h1>
           </div>
@@ -364,51 +340,59 @@
             <!-- TODO | MAP BIN START -->
             <div class="try" id="try">
             <!-- BIN 1 START -->
-            <a href="#b1" id="bin_btn1" data-value="1" data-loc="ALVARADO HALL" data-id="BIN 1"> 
-            <img id="bin_img1b b1" class="w-[5%] absolute top-[14.5%] left-[17%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl" src="images/sidebar/yellowbin.png" alt="img_bin1"/> 
+            <a href="#b1" id="bin_btn1" data-value="1" data-loc="ALVARADO HALL" data-id="BIN 1" data-stat="3"> 
+            <img id="bin_img1" 
+                data-stat="3" 
+                class="w-[5%] absolute top-[14.5%] left-[17%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl" 
+                src="images/sidebar/yellowbin.png" 
+                alt="img_bin1"/> 
             
           </a>
             <!-- BIN 1 END -->
 
             <!-- BIN 2 START -->
-            <a href="#b2" id="bin_btn2" data-value="2" data-loc="PIMENTEL HALL" data-id="BIN 2">
-              <img id="bin_img2b b2"
+            <a href="#b2" id="bin_btn2" data-value="2" data-loc="PIMENTEL HALL" data-id="BIN 2" data-stat="3">
+              <img id="bin_img2"
+                  data-stat="3"
                   class="w-[5%] absolute top-[57%] left-[19%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl"
                   src="images/sidebar/bluebin.png"
-                  alt=""
+                  alt="img_bin2"
                 />
               
               </a>
             <!-- BIN 2 END -->
 
             <!-- BIN 3 START -->
-            <a href="#b3" id="bin_btn3" data-value="3" data-loc="CHTM BUILDING" data-id="BIN 3">
-              <img id="bin_img3b b3"
+            <a href="#b3" id="bin_btn3" data-value="3" data-loc="CHTM BUILDING" data-id="BIN 3" data-stat="3">
+              <img id="bin_img3"
+                  data-stat="3"
                   class="w-[5%] absolute top-[8%] left-[45%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl"
                   src="images/sidebar/emptybin.png"
-                  alt=""
+                  alt="img_bin3"
                 />
               
             </a>
               <!-- BIN 3 END -->
 
               <!-- BIN 4 START -->
-              <a href="#b4" id="bin_btn4" data-value="4" data-loc="ROXAS HALL" data-id="BIN 4">
-                <img id="bin_img4b b4"
+              <a href="#b4" id="bin_btn4" data-value="4" data-loc="ROXAS HALL" data-id="BIN 4" data-stat="3">
+                <img id="bin_img4"
+                    data-stat="3"
                     class="w-[5%] absolute top-[55%] left-[44%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl"
                     src="images/sidebar/fullbin.png"
-                    alt="" 
+                    alt="img_bin4" 
                   />
                 
               </a>
               <!-- BIN 4 END -->
 
               <!-- BIN 5 START -->
-              <a href="#b5" id="bin_btn5" data-value="5" data-loc="NATIVIDAD HALL" data-id="BIN 5">
-                <img id="bin_img5b b5"
+              <a href="#b5" id="bin_btn5" data-value="5" data-loc="NATIVIDAD HALL" data-id="BIN 5" data-stat="3">
+                <img id="bin_img5"
+                    data-stat="3"
                     class="w-[5%] absolute bottom-[25%] left-[59%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl"
                     src="images/sidebar/errorbin.png"
-                    alt=""
+                    alt="img_bin5"
                   />
                
               </a>
