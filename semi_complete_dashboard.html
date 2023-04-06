@@ -106,7 +106,7 @@
             $('#bin_id').html(id1);
             $('#bin_img').attr('src',img1);
             $('#bin_stat').html(stat1);
-            run_algo([2,3],reinstate_path());
+            run_algo([3,2],reinstate_path());
       
         });
         $('#bin_btn2').click(function(){
@@ -145,7 +145,7 @@
             $('#bin_id').html(id4);
             $('#bin_img').attr('src',img4);
             $('#bin_stat').html(stat4);
-            run_algo([10,10],reinstate_path());
+            run_algo([9,9],reinstate_path());
          
         });
         $('#bin_btn5').click(function(){
@@ -158,7 +158,7 @@
             $('#bin_id').html(id5);
             $('#bin_img').attr('src',img5);
             $('#bin_stat').html(stat5);
-            run_algo([9,12],reinstate_path());
+            run_algo([9,13],reinstate_path());
            
         });
       }
@@ -545,7 +545,7 @@
           output +='<div id="S" class="road"></div>';
         }
 
-        if(shortestPath[9][13]==5 && (shortestPath[9][14]==5 || shortestPath[9][15]==5 || shortestPath[9][16]==5 || shortestPath[9][17]==5) && shortestPath[9][18]==5){
+        if(shortestPath[9][14]==5 && (shortestPath[9][15]==5 || shortestPath[9][16]==5 || shortestPath[9][17]==5) && shortestPath[9][18]==5){
           output+='<div id="T"   class="absolute h-[2.3%] w-[31.5%] bg-[#F53180] opacity-60 top-[66.4%] left-[65%] rounded-2xl" style="transform: rotate(.3deg);"></div>';
         }else{
           output +='<div id="T" class="road"></div>';
