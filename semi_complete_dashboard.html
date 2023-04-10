@@ -192,12 +192,20 @@
         const userAgent = 'my-integration/my-integration-version';
 
         const requestData = {
-          identifiers: [{
+          identifiers: [
+            {
             device_ids: {
               device_id: devId,
               application_ids: { application_id: appId }
             }
-          }]
+          },
+          {
+            device_ids: {
+              device_id: 'dev2',
+              application_ids: { application_id: 'node-test-2623' }
+            }
+          }
+        ]
         };
 
         const requestHeaders = new Headers({
@@ -217,6 +225,7 @@
           .then(response => {
             const reader = response.body.getReader();
             let buffer = '';
+            let deviceData = {};
             return reader.read().then(function processText({ done, value }) {
               if (done) {
                 return;
@@ -229,8 +238,17 @@
               for (const message of messages) {
                 const messageObject = JSON.parse(message); // Parse the message string into a JSON object
                 if (messageObject.result.name === "as.up.data.forward") { // Filter for uplink messages
-                  console.log(messageObject);
+                  const devId = messageObject.identifiers[0].device_ids.device_id;
+                  if (!deviceData[devId]) {
+                    deviceData[devId] = [];
+                  }
+                  deviceData[devId].push(messageObject);
                 }
+              }
+
+              for (const devId in deviceData) {
+                console.log(`Device ID: ${devId}`);
+                console.log(deviceData[devId]);
               }
 
               return reader.read().then(processText);
