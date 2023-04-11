@@ -306,6 +306,98 @@
           });
         }
 
+        function get_API_data2() {
+        const appId = "node-test-2623";
+        const devId1 = "dev1";
+        const devId2 = "dev2";
+        const apiKey = '6YBI3WYB66EFLKZUP65CRWJFOPJFAJ6BLY7KVYA.6SWYDMDL5AI4FCQW5DZYQSU4TFUIIZ5NPQ4CW4LF6KQDLGQONVVQ';
+        const apiUrl = 'https://au1.cloud.thethings.network/api/v3/events';
+        const authToken = `Bearer NNSXS.${apiKey}`;
+        const contentType = 'application/json';
+        const userAgent = 'my-integration/my-integration-version';
+
+        const requestData = {
+          identifiers: [
+            {
+              device_ids: {
+                device_id: devId1,
+                application_ids: { application_id: appId }
+              }
+            },
+            {
+              device_ids: {
+                device_id: devId2,
+                application_ids: { application_id: appId }
+              }
+            }
+          ]
+        };
+
+        const requestHeaders = new Headers({
+          'Authorization': authToken,
+          'Accept': 'text/event-stream',
+          'Content-Type': contentType,
+          'User-Agent': userAgent
+        });
+
+        const requestOptions = {
+          method: 'POST',
+          headers: requestHeaders,
+          body: JSON.stringify(requestData)
+        };
+
+        fetch(apiUrl, requestOptions)
+          .then(response => {
+            const reader = response.body.getReader();
+            let buffer = '';
+            let deviceData = {};
+
+            // Load the previous data from local storage
+            const storedData = JSON.parse(localStorage.getItem('deviceData'));
+            if (storedData) {
+              deviceData = storedData;
+            }
+
+            return reader.read().then(function processText({ done, value }) {
+              if (done) {
+                return;
+              }
+
+              buffer += new TextDecoder().decode(value);
+              const messages = buffer.split('\n\n');
+              buffer = messages.pop();
+
+              for (const message of messages) {
+                const messageObject = JSON.parse(message); // Parse the message string into a JSON object
+                if (messageObject.result.name === "as.up.data.forward") { // Filter for uplink messages
+                  const deviceId = messageObject.identifiers[0].device_ids.device_id;
+                  if (!deviceData[deviceId]) {
+                    deviceData[deviceId] = [];
+                  }
+                  deviceData[deviceId].push(messageObject);
+                }
+              }
+
+              // Save the latest data to local storage
+              localStorage.setItem('deviceData', JSON.stringify(deviceData));
+
+              for (deviceId in deviceData) {
+                console.log(`Device ID: ${deviceId}`);
+                console.log(deviceData[deviceId]);
+              }
+
+              // Reload the page to display the latest data
+              window.location.reload(true);
+
+              return reader.read().then(processText);
+            });
+          })
+          .catch(error => {
+            console.error(error);
+            console.log(error.message);
+          });
+      }
+
 
     function antColonyDijkstra(bsu, startCoord, endCoord, numAnts, iterations) {
     const distances = [];
