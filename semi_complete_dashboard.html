@@ -15,7 +15,6 @@
     <link rel="apple-touch-icon" href="/images/favicons/Website Logo .png">
     <link rel="apple-touch-startup-image" href="/images/favicons/Website Logo .png">
     <link rel="manifest" href="/src/manifest.json">
-
     <title>WAZTE</title>
     <!--BOOTSTRAP/JQUERY/JQUERY UI-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
@@ -250,11 +249,53 @@
                   deviceData[devId].push(messageObject);
                 }
               }
+              
 
+              /*
+              TEMPLATE FETCH DATA CODES
+              
               for (const devId in deviceData) {
                 console.log(`Device ID: ${devId}`);
                 console.log(deviceData[devId]);
               }
+              let latestData = {};
+              
+
+              //GET LATEST DATA
+              for (const message of messages) {
+                const messageObject = JSON.parse(message); // Parse the message string into a JSON object
+                if (messageObject.result.name === "as.up.data.forward") { // Filter for uplink messages
+                  const deviceId = messageObject.identifiers[0].device_ids.device_id;
+                  if (!latestData[deviceId] || messageObject.metadata.time > latestData[deviceId].metadata.time) {
+                    latestData[deviceId] = messageObject;
+                  }
+                }
+              }
+
+              for (const deviceId in latestData) {
+                console.log(`Device ID: ${deviceId}`);
+                console.log(latestData[deviceId]);
+              }
+
+
+              //STORE DATA FROM LOCAL STORAGE
+              localStorage.setItem('myObject', JSON.stringify(myVariable));
+
+              //LOAD DATA FROM LOCAL STORAGE
+              var storedObject = localStorage.getItem('myObject');
+              var parsedObject = JSON.parse(storedObject);
+
+
+              var storedObject = localStorage.getItem('myObject');
+              if (storedObject !== null) {
+                var parsedObject = JSON.parse(storedObject);
+                // Do something with the parsed object
+              } else {
+                // The data doesn't exist in local storage yet
+              }
+              */
+
+
 
               return reader.read().then(processText);
             });
