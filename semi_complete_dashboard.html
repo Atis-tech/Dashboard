@@ -173,12 +173,12 @@
         [0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0],
         [0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0],
         [0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0],
-        [0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+        [0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0],
         [0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0],
-        [0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 4, 0, 0, 0, 0, 1, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 8, 0],
+        [0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 4, 0, 0, 0, 0, 8, 0],
     ];
         return bsu;
       }
@@ -439,7 +439,7 @@
     );
     var pathValue=0;
         pathValue = ((shortestPath[3][0]==5 && shortestPath[3][1]==5 && shortestPath[3][2]==5 && shortestPath[3][3]==5) ? 64 : 0)
-          + ((shortestPath[4][3]==5 && shortestPath[5][3]==5 && shortestPath[6][3]==5 && shortestPath[7][3]==5) ? 84 : 0)
+         + ((shortestPath[4][3]==5 && shortestPath[5][3]==5 && shortestPath[6][3]==5 && shortestPath[7][3]==5) ? 84 : 0)
           + ((shortestPath[8][1]==5 && shortestPath[8][2]==5 && shortestPath[8][3]==5) ? 36 : 0)
           + ((shortestPath[9][1]==5 && shortestPath[10][1]==5) ? 27 : 0)
           + ((shortestPath[11][1]==5 && shortestPath[11][2]==5 && shortestPath[11][3]==5 && shortestPath[11][4]==5 && shortestPath[11][5]==5 && shortestPath[11][6]==5) ? 75 : 0)
@@ -456,10 +456,10 @@
           + ((shortestPath[5][10]==5 && shortestPath[5][11]==5 && shortestPath[5][12]==5 && shortestPath[5][13]==5) ? 49 : 0)
           + ((shortestPath[9][10]==5 && shortestPath[9][11]==5 && shortestPath[9][12]==5 && shortestPath[9][13]==5) ? 55 : 0)
           + ((shortestPath[6][13]==5 && shortestPath[7][13]==5 && shortestPath[8][13]==5) ? 56 : 0)
-          + ((shortestPath[10][13]==5 && shortestPath[11][13]==5 && shortestPath[12][13]==5) ? 15 : 0)
-          + ((shortestPath[9][14]==5 && shortestPath[9][15]==5 && shortestPath[9][16]==5 && shortestPath[9][17]==5 && shortestPath[9][18]==5) ? 115 : 0)
-          + ((shortestPath[0][18]==5 && shortestPath[1][18]==5 && shortestPath[2][18]==5 && shortestPath[3][18]==5 && shortestPath[4][18]==5 && shortestPath[5][18]==5 && shortestPath[6][18]==5 && shortestPath[7][18]==5 && shortestPath[8][18]==5) ? 181 : 0)
-          + ((shortestPath[10][18]==5 && shortestPath[12][18]==5 && shortestPath[13][18]==5 && shortestPath[14][18]==5) ? 78 : 0);
+          + ((shortestPath[11][13]==5 && shortestPath[12][13]==5 && shortestPath[13][13]==5 && shortestPath[14][13]==5) ? 15 : 0)
+          + ((shortestPath[11][14]==5 && shortestPath[11][15]==5 && shortestPath[11][16]==5 && shortestPath[11][17]==5 && shortestPath[11][18]==5) ? 115 : 0)
+          + ((shortestPath[0][18]==5 && shortestPath[1][18]==5 && shortestPath[2][18]==5 && shortestPath[3][18]==5 && shortestPath[4][18]==5 && shortestPath[5][18]==5 && shortestPath[6][18]==5 && shortestPath[7][18]==5 && shortestPath[8][18]==5 && shortestPath[9][18]==5 && shortestPath[10][18]==5) ? 181 : 0)
+          + ((shortestPath[12][18]==5 && shortestPath[13][18]==5 && shortestPath[14][18]==5) ? 78 : 0);
    
     if(pathValue!=value){
         bsuCopy[5][3] = 0;
@@ -591,7 +591,7 @@
           output +='<div id="Q" class="road"></div>';
         }
 
-        if(shortestPath[9][12]==5){
+        if(shortestPath[10][13]==5){
           output+='<div id="Q2"   class="absolute h-[2.3%] w-[4%] bg-[#F53180] opacity-60 top-[64.6%] left-[63.5%] rounded-2xl" style="transform: rotate(90deg);"></div>';
         }else{
           output +='<div id="Q2" class="road"></div>';
@@ -603,25 +603,25 @@
           output +='<div id="R" class="road"></div>';
         }
 
-        if(shortestPath[10][13]==5 && shortestPath[11][13]==5 && shortestPath[12][13]==5){
+        if(shortestPath[11][13]==5 && shortestPath[12][13]==5 && shortestPath[13][13]==5 && shortestPath[14][13]==5){
           output+='<div id="S"   class="absolute h-[2.3%] w-[7.5%] bg-[#F53180] opacity-60 top-[70.4%] left-[61.7%] rounded-2xl" style="transform: rotate(90.3deg);"></div>';
         }else{
           output +='<div id="S" class="road"></div>';
         }
 
-        if(shortestPath[9][14]==5 && shortestPath[9][15]==5 && shortestPath[9][16]==5 && shortestPath[9][17]==5 && shortestPath[9][18]==5){
+        if(shortestPath[11][14]==5 && shortestPath[11][15]==5 && shortestPath[11][16]==5 && shortestPath[11][17]==5 && shortestPath[11][18]==5){
           output+='<div id="T"   class="absolute h-[2.3%] w-[31.5%] bg-[#F53180] opacity-60 top-[66.4%] left-[65%] rounded-2xl" style="transform: rotate(.3deg);"></div>';
         }else{
           output +='<div id="T" class="road"></div>';
         }
 
-        if(shortestPath[0][18]==5 && shortestPath[1][18]==5 && shortestPath[2][18]==5 && shortestPath[3][18]==5 && shortestPath[4][18]==5 && shortestPath[5][18]==5 && shortestPath[6][18]==5 && shortestPath[7][18]==5 && shortestPath[8][18]==5){
+        if(shortestPath[0][18]==5 && shortestPath[1][18]==5 && shortestPath[2][18]==5 && shortestPath[3][18]==5 && shortestPath[4][18]==5 && shortestPath[5][18]==5 && shortestPath[6][18]==5 && shortestPath[7][18]==5 && shortestPath[8][18]==5 && shortestPath[9][18]==5 && shortestPath[10][18]==5){
           output+='<div id="U"   class="absolute h-[2.3%] w-[46%] bg-[#F53180] opacity-60 top-[33.5%] left-[72.4%] rounded-2xl" style="transform: rotate(89deg);"></div>';
         }else{
           output +='<div id="U" class="road"></div>';
         }
 
-        if(shortestPath[10][18]==5 && shortestPath[12][18]==5 && shortestPath[13][18]==5 && shortestPath[14][18]==5){
+        if(shortestPath[12][18]==5 && shortestPath[13][18]==5 && shortestPath[14][18]==5){
         output+='<div id="V"   class="absolute h-[2.3%] w-[22%] bg-[#F53180] opacity-60 top-[81%] left-[85%] rounded-2xl" style="transform: rotate(89deg);"></div>';
         }else{
           output +='<div id="V" class="road"></div>';
