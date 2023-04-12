@@ -14,7 +14,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="/images/favicons/Website Logo .png">
     <link rel="apple-touch-startup-image" href="/images/favicons/Website Logo .png">
-    <link rel="manifest" href="/src/manifest.json">
+    <link rel="manifest" href="manifest.json">
     <title>WAZTE</title>
     <!--BOOTSTRAP/JQUERY/JQUERY UI-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
@@ -26,7 +26,7 @@
     <script>
         $(document).ready(function(){
           try{
-            setInterval(get_API_data(),3600);
+            get_API_data();
             bin_status();
           }finally{
             for_date();
@@ -187,9 +187,9 @@
         return bsu;
       }
       function get_API_data(){
-        const appId = "node-test-2623";
-        const devId = "dev1";
-        const apiKey = '6YBI3WYB66EFLKZUP65CRWJFOPJFAJ6BLY7KVYA.6SWYDMDL5AI4FCQW5DZYQSU4TFUIIZ5NPQ4CW4LF6KQDLGQONVVQ';
+        const appId = "bulsu-lora-bin";
+        const devId = "bin-1";
+        const apiKey = 'AEO5BYYNBDURPIYFECSVUJD45X3G2WWKJDZCDYY.27T7EP5MBZQVRRBXK5IL3RDRT3ZCHLMQOWPHFFYD2U7JOY4TQBIQ';
         const apiUrl = 'https://au1.cloud.thethings.network/api/v3/events';
         const authToken = `Bearer NNSXS.${apiKey}`;
         const contentType = 'application/json';
@@ -201,12 +201,6 @@
             device_ids: {
               device_id: devId,
               application_ids: { application_id: appId }
-            }
-          },
-          {
-            device_ids: {
-              device_id: 'dev2',
-              application_ids: { application_id: 'node-test-2623' }
             }
           }
         ]
@@ -241,13 +235,19 @@
 
               for (const message of messages) {
                 const messageObject = JSON.parse(message); // Parse the message string into a JSON object
+
                 if (messageObject.result.name === "as.up.data.forward") { // Filter for uplink messages
-                  const devId = messageObject.identifiers[0].device_ids.device_id;
-                  if (!deviceData[devId]) {
-                    deviceData[devId] = [];
+                  console.log(messageObject);
+                  const devIds = messageObject.identifiers[0].device_ids.device_id;
+                  const binValue = messageObject.result.data.uplink_message.decoded_payload.text;
+                  console.log(binValue);
+                  if (!deviceData[devIds]) {
+                    deviceData[devIds] = [];
                   }
-                  deviceData[devId].push(messageObject);
+                  c
+                  deviceData[devIds].push(messageObject);
                 }
+               
               }
               
 
