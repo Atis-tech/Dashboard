@@ -27,7 +27,9 @@
         $(document).ready(function(){
           try{
             get_API_data();
-            bin_status();
+            setInterval(() => {
+              bin_status();
+            }, 3600); 
           }finally{
             for_date();
             buttons();
@@ -40,13 +42,30 @@
         }
         
         function bin_status(){
-          //Changing depending to API
-            var bin1 = 1;
-            var bin2 = 3;
-            var bin3 = 3;
-            var bin4 = 4;
-            var bin5 = 5;
+          //Main variable
+          var bin1;     
+          var bin2;
+          var bin3;
+          var bin4;
+          var bin5;
 
+          //Changing depending to API
+          var storedObject = localStorage.getItem('BinStatus');
+          console.log(storedObject);
+            if (storedObject !== null) {
+              var parsedObject = JSON.parse(storedObject);
+              bin1 = parsedObject['bin-1'];
+              bin2 = parsedObject['bin-2'];
+              bin3 = parsedObject['bin-3'];
+              bin4 = parsedObject['bin-4'];
+              bin5 = parsedObject['bin-5'];
+            }else {
+              bin1 = 0;     
+              bin2 = 0;
+              bin3 = 0;
+              bin4 = 0;
+              bin5 = 0;
+            }
             //types of bin status
             var stat1=1; //half full
             var stat2=2; //minimal
@@ -80,24 +99,24 @@
             const bin = bins[i];
             const value = bin.value;
 
-            if (value == stat1) { 
+            if (value >= 25 && value <= 50) { 
               $(bin.btn).attr('data-stat',stata);
               $(bin.img).attr('src', hf_img);
-            } else if (value == stat2) {
+            } else if (value >= 1 && value <= 24) {
               $(bin.btn).attr('data-stat',statb);
               $(bin.img).attr('src', min_img);
-            } else if (value == stat3) {
+            } else if (value == 0) {
               $(bin.btn).attr('data-stat',statc);
               $(bin.img).attr('src', emp_img);
-            } else if (value == stat4) {
+            } else if (value >= 51 && value <= 70) {
               $(bin.btn).attr('data-stat',statd);
               $(bin.img).attr('src', full_img);
-            } else if (value == stat5) {
+            } else if (value < 0) {
               $(bin.btn).attr('data-stat',state);
               $(bin.img).attr('src', err_img);
             }
+          }
         }
-      }
 
       function buttons(){
         $('#bin_btn1').click(function(){
@@ -166,6 +185,7 @@
            
         });
       }
+
       function reinstate_path(){
         var bsu = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0],
@@ -188,7 +208,11 @@
       }
       function get_API_data(){
         const appId = "bulsu-lora-bin";
-        const devId = "bin-1";
+        const devId1 = "bin-1";
+        const devId2 = "bin-2";
+        const devId3 = "bin-3";
+        const devId4 = "bin-4";
+        const devId5= "bin-5";
         const apiKey = 'AEO5BYYNBDURPIYFECSVUJD45X3G2WWKJDZCDYY.27T7EP5MBZQVRRBXK5IL3RDRT3ZCHLMQOWPHFFYD2U7JOY4TQBIQ';
         const apiUrl = 'https://au1.cloud.thethings.network/api/v3/events';
         const authToken = `Bearer NNSXS.${apiKey}`;
@@ -197,13 +221,37 @@
 
         const requestData = {
           identifiers: [
+              {
+              device_ids: {
+                device_id: devId1,
+                application_ids: { application_id: appId }
+              }
+            },
             {
-            device_ids: {
-              device_id: devId,
-              application_ids: { application_id: appId }
+              device_ids: {
+                device_id: devId2,
+                application_ids: { application_id: appId }
+              }
+            },
+            {
+              device_ids: {
+                device_id: devId3,
+                application_ids: { application_id: appId }
+              }
+            },
+            {
+              device_ids: {
+                device_id: devId4,
+                application_ids: { application_id: appId }
+              }
+            },
+            {
+              device_ids: {
+                device_id: devId5,
+                application_ids: { application_id: appId }
+              }
             }
-          }
-        ]
+          ]
         };
 
         const requestHeaders = new Headers({
@@ -238,65 +286,35 @@
 
                 if (messageObject.result.name === "as.up.data.forward") { // Filter for uplink messages
                   console.log(messageObject);
-                  const devIds = messageObject.identifiers[0].device_ids.device_id;
-                  const binValue = messageObject.result.data.uplink_message.decoded_payload.text;
+                  const devIds = messageObject.result?.identifiers?.[0]?.device_ids?.device_id;
+                  const binValue = messageObject.result?.data?.uplink_message?.decoded_payload?.text;
                   console.log(binValue);
-                  if (!deviceData[devIds]) {
-                    deviceData[devIds] = [];
+                  console.log(devIds);
+                  switch (devIds) {
+                    case devId:
+                      deviceData[devId1] = parseInt(binValue);
+                      break;
+                    case devId2:
+                      deviceData[devId2] = parseInt(binValue);
+                      break;
+                    case devId3:
+                      deviceData[devId3] = parseInt(binValue);
+                      break;
+                    case devId4:
+                      deviceData[devId4] = parseInt(binValue);
+                      break;
+                    case devId5:
+                      deviceData[devId5] = parseInt(binValue);
+                      break;
+                    default:
+                      break;
                   }
-                  c
-                  deviceData[devIds].push(messageObject);
-                }
-               
-              }
-              
-
-              /*
-              TEMPLATE FETCH DATA CODES
-              
-              for (const devId in deviceData) {
-                console.log(`Device ID: ${devId}`);
-                console.log(deviceData[devId]);
-              }
-              let latestData = {};
-              
-
-              //GET LATEST DATA
-              for (const message of messages) {
-                const messageObject = JSON.parse(message); // Parse the message string into a JSON object
-                if (messageObject.result.name === "as.up.data.forward") { // Filter for uplink messages
-                  const deviceId = messageObject.identifiers[0].device_ids.device_id;
-                  if (!latestData[deviceId] || messageObject.metadata.time > latestData[deviceId].metadata.time) {
-                    latestData[deviceId] = messageObject;
-                  }
+                  //deviceData[devIds].push(binValue);
+                  console.log(deviceData);
+                  localStorage.setItem('BinStatus', JSON.stringify(deviceData));
                 }
               }
-
-              for (const deviceId in latestData) {
-                console.log(`Device ID: ${deviceId}`);
-                console.log(latestData[deviceId]);
-              }
-
-
-              //STORE DATA FROM LOCAL STORAGE
-              localStorage.setItem('myObject', JSON.stringify(myVariable));
-
-              //LOAD DATA FROM LOCAL STORAGE
-              var storedObject = localStorage.getItem('myObject');
-              var parsedObject = JSON.parse(storedObject);
-
-
-              var storedObject = localStorage.getItem('myObject');
-              if (storedObject !== null) {
-                var parsedObject = JSON.parse(storedObject);
-                // Do something with the parsed object
-              } else {
-                // The data doesn't exist in local storage yet
-              }
-              */
-
-
-
+              
               return reader.read().then(processText);
             });
           })
@@ -306,261 +324,167 @@
           });
         }
 
-        function get_API_data2() {
-        const appId = "node-test-2623";
-        const devId1 = "dev1";
-        const devId2 = "dev2";
-        const apiKey = '6YBI3WYB66EFLKZUP65CRWJFOPJFAJ6BLY7KVYA.6SWYDMDL5AI4FCQW5DZYQSU4TFUIIZ5NPQ4CW4LF6KQDLGQONVVQ';
-        const apiUrl = 'https://au1.cloud.thethings.network/api/v3/events';
-        const authToken = `Bearer NNSXS.${apiKey}`;
-        const contentType = 'application/json';
-        const userAgent = 'my-integration/my-integration-version';
+        function antColonyDijkstra(bsu, startCoord, endCoord, numAnts, iterations) {
+          const distances = [];
+          const visited = [];
+          const prev = [];
+          const rows = bsu.length;
+          const cols = bsu[0].length;
+          const direction = [
+            [-1, 0],
+            [1, 0],
+            [0, -1],
+            [0, 1],
+          ];
+          const pheromones = new Array(rows * cols).fill(0.1);
 
-        const requestData = {
-          identifiers: [
-            {
-              device_ids: {
-                device_id: devId1,
-                application_ids: { application_id: appId }
-              }
-            },
-            {
-              device_ids: {
-                device_id: devId2,
-                application_ids: { application_id: appId }
+          // Initialize distances, visited, and prev arrays
+          for (let i = 0; i < rows; i++) {
+            distances[i] = new Array(cols).fill(Number.MAX_SAFE_INTEGER);
+            visited[i] = new Array(cols).fill(false);
+            prev[i] = new Array(cols).fill(null); // initialized to null
+          }
+
+          let start = startCoord,
+            end = [];
+
+          // Find end points
+          for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+              if (bsu[i][j] === 9) {
+                end.push([i, j]);
               }
             }
-          ]
-        };
+          }
 
-        const requestHeaders = new Headers({
-          'Authorization': authToken,
-          'Accept': 'text/event-stream',
-          'Content-Type': contentType,
-          'User-Agent': userAgent
-        });
+          for (let it = 0; it < iterations; it++) {
+            // Traverse the graph using Dijkstra's algorithm, biased by pheromones
+            for (let ant = 0; ant < numAnts; ant++) {
+              let [currRow, currCol] = start;
+              let dist = 0;
 
-        const requestOptions = {
-          method: 'POST',
-          headers: requestHeaders,
-          body: JSON.stringify(requestData)
-        };
+              while (true) {
+                visited[currRow][currCol] = true;
 
-        fetch(apiUrl, requestOptions)
-          .then(response => {
-            const reader = response.body.getReader();
-            let buffer = '';
-            let deviceData = {};
+                // Update pheromone trail and distances
+                let idx = currRow * cols + currCol;
+                pheromones[idx] += 1.0 / (dist + 1);
+                distances[currRow][currCol] = Math.min(
+                  distances[currRow][currCol],
+                  dist
+                );
 
-            // Load the previous data from local storage
-            const storedData = JSON.parse(localStorage.getItem('deviceData'));
-            if (storedData) {
-              deviceData = storedData;
-            }
-
-            return reader.read().then(function processText({ done, value }) {
-              if (done) {
-                return;
-              }
-
-              buffer += new TextDecoder().decode(value);
-              const messages = buffer.split('\n\n');
-              buffer = messages.pop();
-
-              for (const message of messages) {
-                const messageObject = JSON.parse(message); // Parse the message string into a JSON object
-                if (messageObject.result.name === "as.up.data.forward") { // Filter for uplink messages
-                  const deviceId = messageObject.identifiers[0].device_ids.device_id;
-                  if (!deviceData[deviceId]) {
-                    deviceData[deviceId] = [];
-                  }
-                  deviceData[deviceId].push(messageObject);
+                // Check if endpoint has been reached
+                if (currRow === endCoord[0] && currCol === endCoord[1]) {
+                  break;
                 }
+
+                let maxPheromone = 0;
+                let probs = [];
+                let probSum = 0;
+
+                // Calculate the probability of moving to each neighbor node
+                for (let d = 0; d < 4; d++) {
+                  let [nextRow, nextCol] = [
+                    currRow + direction[d][0],
+                    currCol + direction[d][1],
+                  ];
+                  if (
+                    nextRow >= 0 &&
+                    nextRow < rows &&
+                    nextCol >= 0 &&
+                    nextCol < cols &&
+                    !visited[nextRow][nextCol] &&
+                    bsu[nextRow][nextCol] !== 0
+                  ) {
+                    let idx = nextRow * cols + nextCol;
+                    let pher = pheromones[idx];
+                    let dist2 = distances[currRow][currCol] + 1;
+                    let prob = Math.pow(pher, 1) / Math.pow(dist2, 2);
+                    probs.push(prob);
+                    probSum += prob;
+                    if (pher > maxPheromone) {
+                      maxPheromone = pher;
+                    }
+                  } else {
+                    probs.push(0);
+                  }
+                }
+                if (probSum === 0) {
+                  let [prevRow, prevCol] = prev[currRow][currCol];
+                  [currRow, currCol] = [prevRow, prevCol];
+                  dist--;
+                  continue;
+                }
+
+                // Choose the next move based on the probabilities
+                let rand = Math.random() * probSum;
+                let probAcc = 0;
+                let nextRow, nextCol;
+
+                for (let d = 0; d < 4; d++) {
+                  nextRow = currRow + direction[d][0];
+                  nextCol = currCol + direction[d][1];
+
+                  if (
+                    nextRow >= 0 &&
+                    nextRow < rows &&
+                    nextCol >= 0 &&
+                    nextCol < cols &&
+                    !visited[nextRow][nextCol] &&
+                    bsu[nextRow][nextCol] !== 0
+                  ) {
+                    probAcc += probs[d];
+                    if (rand <= probAcc) {
+                      break;
+                    }
+                  }
+                }
+
+                // Update current node and distance
+                dist++;
+                prev[nextRow][nextCol] = [currRow, currCol];
+                [currRow, currCol] = [nextRow, nextCol];
               }
 
-              // Save the latest data to local storage
-              localStorage.setItem('deviceData', JSON.stringify(deviceData));
+              // Update start node for the next ant
+              start = endCoord;
+            }
 
-              for (deviceId in deviceData) {
-                console.log(`Device ID: ${deviceId}`);
-                console.log(deviceData[deviceId]);
-              }
-
-              // Reload the page to display the latest data
-              window.location.reload(true);
-
-              return reader.read().then(processText);
-            });
-          })
-          .catch(error => {
-            console.error(error);
-            console.log(error.message);
-          });
-      }
-
-
-    function antColonyDijkstra(bsu, startCoord, endCoord, numAnts, iterations) {
-    const distances = [];
-    const visited = [];
-    const prev = [];
-    const rows = bsu.length;
-    const cols = bsu[0].length;
-    const direction = [
-      [-1, 0],
-      [1, 0],
-      [0, -1],
-      [0, 1],
-    ];
-    const pheromones = new Array(rows * cols).fill(0.1);
-
-    // Initialize distances, visited, and prev arrays
-    for (let i = 0; i < rows; i++) {
-      distances[i] = new Array(cols).fill(Number.MAX_SAFE_INTEGER);
-      visited[i] = new Array(cols).fill(false);
-      prev[i] = new Array(cols).fill(null); // initialized to null
-    }
-
-    let start = startCoord,
-      end = [];
-
-    // Find end points
-    for (let i = 0; i < rows; i++) {
-      for (let j = 0; j < cols; j++) {
-        if (bsu[i][j] === 9) {
-          end.push([i, j]);
-        }
-      }
-    }
-
-    for (let it = 0; it < iterations; it++) {
-      // Traverse the graph using Dijkstra's algorithm, biased by pheromones
-      for (let ant = 0; ant < numAnts; ant++) {
-        let [currRow, currCol] = start;
-        let dist = 0;
-
-        while (true) {
-          visited[currRow][currCol] = true;
-
-          // Update pheromone trail and distances
-          let idx = currRow * cols + currCol;
-          pheromones[idx] += 1.0 / (dist + 1);
-          distances[currRow][currCol] = Math.min(
-            distances[currRow][currCol],
-            dist
-          );
-
-          // Check if endpoint has been reached
-          if (currRow === endCoord[0] && currCol === endCoord[1]) {
-            break;
-          }
-
-          let maxPheromone = 0;
-          let probs = [];
-          let probSum = 0;
-
-          // Calculate the probability of moving to each neighbor node
-          for (let d = 0; d < 4; d++) {
-            let [nextRow, nextCol] = [
-              currRow + direction[d][0],
-              currCol + direction[d][1],
-            ];
-            if (
-              nextRow >= 0 &&
-              nextRow < rows &&
-              nextCol >= 0 &&
-              nextCol < cols &&
-              !visited[nextRow][nextCol] &&
-              bsu[nextRow][nextCol] !== 0
-            ) {
-              let idx = nextRow * cols + nextCol;
-              let pher = pheromones[idx];
-              let dist2 = distances[currRow][currCol] + 1;
-              let prob = Math.pow(pher, 1) / Math.pow(dist2, 2);
-              probs.push(prob);
-              probSum += prob;
-              if (pher > maxPheromone) {
-                maxPheromone = pher;
-              }
-            } else {
-              probs.push(0);
+            // Update pheromone trail evaporation and decay
+            for (let i = 0; i < rows * cols; i++) {
+              pheromones[i] *= 0.99;
+              pheromones[i] = Math.max(pheromones[i], 0.1);
             }
           }
-          if (probSum === 0) {
+
+          // Trace back the optimal path using the prev array
+          let path = [endCoord];
+          let [currRow, currCol] = endCoord;
+
+          while (prev[currRow][currCol] !== null) {
             let [prevRow, prevCol] = prev[currRow][currCol];
+            path.unshift([prevRow, prevCol]);
             [currRow, currCol] = [prevRow, prevCol];
-            dist--;
-            continue;
           }
 
-          // Choose the next move based on the probabilities
-          let rand = Math.random() * probSum;
-          let probAcc = 0;
-          let nextRow, nextCol;
-
-          for (let d = 0; d < 4; d++) {
-            nextRow = currRow + direction[d][0];
-            nextCol = currCol + direction[d][1];
-
-            if (
-              nextRow >= 0 &&
-              nextRow < rows &&
-              nextCol >= 0 &&
-              nextCol < cols &&
-              !visited[nextRow][nextCol] &&
-              bsu[nextRow][nextCol] !== 0
-            ) {
-              probAcc += probs[d];
-              if (rand <= probAcc) {
-                break;
-              }
-            }
+          let shortestPath = [];
+          let curr = endCoord;
+          while (prev[curr[0]][curr[1]] !== null) {
+            shortestPath.unshift(curr);
+            curr = prev[curr[0]][curr[1]];
           }
 
-          // Update current node and distance
-          dist++;
-          prev[nextRow][nextCol] = [currRow, currCol];
-          [currRow, currCol] = [nextRow, nextCol];
+          // Map the return path to the bsu array as num 5
+          for (let i = shortestPath.length - 1; i >= 0; i--) {
+            const row = shortestPath[i][0];
+            const col = shortestPath[i][1];
+            bsu[row][col] = 5;
+          }
+
+          // Return the bsu array with the path mapped as num 5
+          return bsu;
         }
-
-        // Update start node for the next ant
-        start = endCoord;
-      }
-
-      // Update pheromone trail evaporation and decay
-      for (let i = 0; i < rows * cols; i++) {
-        pheromones[i] *= 0.99;
-        pheromones[i] = Math.max(pheromones[i], 0.1);
-      }
-    }
-
-    // Trace back the optimal path using the prev array
-    let path = [endCoord];
-    let [currRow, currCol] = endCoord;
-
-    while (prev[currRow][currCol] !== null) {
-      let [prevRow, prevCol] = prev[currRow][currCol];
-      path.unshift([prevRow, prevCol]);
-      [currRow, currCol] = [prevRow, prevCol];
-    }
-
-    let shortestPath = [];
-    let curr = endCoord;
-    while (prev[curr[0]][curr[1]] !== null) {
-      shortestPath.unshift(curr);
-      curr = prev[curr[0]][curr[1]];
-    }
-
-    // Map the return path to the bsu array as num 5
-    for (let i = shortestPath.length - 1; i >= 0; i--) {
-      const row = shortestPath[i][0];
-      const col = shortestPath[i][1];
-      bsu[row][col] = 5;
-    }
-
-    // Return the bsu array with the path mapped as num 5
-    return bsu;
-
-  }
 
   function run_algo(start_algo,bsu,value){
     var bsuCopy = JSON.parse(JSON.stringify(bsu));
