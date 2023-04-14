@@ -17,15 +17,6 @@
   <link rel="apple-touch-startup-image" href="/images/favicons/Website Logo .png">
   <link rel="manifest" href="manifest.json">
   <title>WAZTE</title>
-
-  <!-- Bootstrap CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
-
-<!-- Bootstrap JavaScript -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
-
-
   <!--BOOTSTRAP/JQUERY/JQUERY UI-->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
@@ -144,7 +135,7 @@
         var statd = "FULL";
         var state = "ERROR";
 
-        //bin image assets
+        //bin image images
         var hf_img = "images/sidebar/yellowbin.png";
         var min_img = "images/sidebar/bluebin.png";
         var emp_img = "images/sidebar/emptybin.png";
@@ -164,19 +155,19 @@
             const bin = bins[i];
             const value = bin.value;
 
-            if (value >= 25 && value <= 50) {
+            if (value >= 24 && value <= 47) {
                 $(bin.btn).attr('data-stat', stata);
                 $(bin.img).attr('src', hf_img);
-            } else if (value >= 1 && value <= 24) {
+            } else if (value >= 48 && value <= 67) {
                 $(bin.btn).attr('data-stat', statb);
                 $(bin.img).attr('src', min_img);
-            } else if (value == 0) {
+            } else if (value<=68 && value>=70) {
                 $(bin.btn).attr('data-stat', statc);
                 $(bin.img).attr('src', emp_img);
-            } else if (value >= 51 && value <= 70) {
+            } else if (value >= 2 && value <= 23) {
                 $(bin.btn).attr('data-stat', statd);
                 $(bin.img).attr('src', full_img);
-            } else if (value < 0) {
+            } else if (value <= 0 || value >=71) {
                 $(bin.btn).attr('data-stat', state);
                 $(bin.img).attr('src', err_img);
             }
@@ -337,6 +328,7 @@
                 const reader = response.body.getReader();
                 let buffer = '';
                 let deviceData = {};
+                let messageDatas = {};
                 return reader.read().then(function processText({ done, value }) {
                     if (done) {
                         return;
@@ -353,10 +345,29 @@
                             console.log(messageObject);
                             const devIds = messageObject.result?.identifiers?.[0]?.device_ids?.device_id;
                             const binValue = messageObject.result?.data?.uplink_message?.decoded_payload?.text;
+                            const binTime = messageObject.result?.data?.uplink_message?.received_at;
+
+                            const timestamp = binTime;
+                            const date = new Date(timestamp);
+
+                            // Convert to Philippine time
+                            const localTime = date.toLocaleString('en-PH', { timeZone: 'Asia/Manila' });
+
+                            // Get the date component in YYYY-MM-DD format
+                            const dateString = localTime.split(',')[0];
+
+                            // Get the time component in HH:MM:SS format
+                            const timeString = localTime.split(',')[1].trim();
+
+                            if (!messageDatas[timeString]) {
+                                messageDatas[dateString] = [];
+                            }
+                            messageDatas[dateString].push({Time : timeString, Bin : devIds, Value : binValue});
+                            console.log(messageDatas);
                             console.log(binValue);
                             console.log(devIds);
                             switch (devIds) {
-                                case devId:
+                                case devId1:
                                     deviceData[devId1] = parseInt(binValue);
                                     break;
                                 case devId2:
@@ -374,9 +385,9 @@
                                 default:
                                     break;
                             }
-                            //deviceData[devIds].push(binValue);
                             console.log(deviceData);
                             localStorage.setItem('BinStatus', JSON.stringify(deviceData));
+                            savetoDatabase(messageDatas);
                         }
                     }
 
@@ -389,8 +400,15 @@
             });
     }
     
-    function savetoDatabase(){
+    function savetoDatabase(logData){
+        var logDate ="";
+        set(ref(db, "Data/" + "Date/" + "Time"),{
+            Bin: "",
+            Status: ""
+        })
+        .then(()=>{
 
+        })
     }
 
     function loadDatabase(){
@@ -864,9 +882,6 @@
           </div>
           <!-- TODO BIN STATUS END -->
 
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Open Modal</button>
-
-
           <!-- TODO | MAP BIN START -->
           <div class="try" id="try">
             <!-- BIN 1 START -->
@@ -930,31 +945,6 @@
         <!-- TODO MAP SECTION END -->
       </div>
       <!-- TODO BODY CONTAINER START -->
-      <div class="modal" id="myModal">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-          <div class="modal-content">
-          
-            <!-- Modal Header -->
-            <div class="modal-header">
-              <h4 class="modal-title">Modal Heading</h4>
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            
-            <!-- Modal body -->
-            <div class="modal-body">
-              <p>Modal content goes here.</p>
-            </div>
-            
-            <!-- Modal footer -->
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save Changes</button>
-            </div>
-            
-          </div>
-        </div>
-      </div>
-      
     </div>
     <!-- TODO MAIN CONTAINER END -->
 </body>
