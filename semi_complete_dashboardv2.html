@@ -1,0 +1,1009 @@
+<!-- BULACAN STATE UNIVERSITY | THESIS PROJECT -->
+<!-- GROUP 1 | AUTOMATION TECHNOLIGIES AND INFORMATION SYSTEM -->
+<!-- PROJECT "WAZTE" | OPTIMIZED PATH ROUTING FOR WASTE MANAGEMENT COLLECTION USING DIJKSTRA ALGORITHM AND ANT COLONY OPTIMIZATION -->
+
+<!-- HTML FILE START -->
+<!DOCTYPE html>
+<html lang="en">
+<!-- HEAD START -->
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/images/favicons/Website Logo .png">
+  <link rel="apple-touch-startup-image" href="/images/favicons/Website Logo .png">
+  <link rel="manifest" href="manifest.json">
+  <title>WAZTE</title>
+  <!--BOOTSTRAP/JQUERY/JQUERY UI-->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+    crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"
+    integrity="sha256-xLD7nhI62fcsEZK2/v8LsBcb4lG7dgULkuXoXB/j91c=" crossorigin="anonymous"></script>
+
+  <!-- FAVICONS IMPLEMENTATION -->
+  <link rel="shortcut icon" href="images/favicons/Website Logo .png" />
+
+  <!-- CSS IMPLEMENTATION -->
+  <link rel="stylesheet" href="" />
+
+  <!-- TAILWIND CSS IMPLEMENTATION -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- FONT STYLE LINK -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet" />
+
+  <!-- FONT STLE IMPLEMENTATION -->
+  <style>
+    * {
+      font-family: "Montserrat", sans-serif;
+    }
+  </style>
+
+  <!--MAIN SCRIPT-->
+  <script type="module">
+
+    //FIREBASE FOR DATABASE
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-analytics.js";
+    import {getDatabase, set, get, update, ref, remove, child} from "https://www.gstatic.com/firebasejs/9.19.1/firebase-database.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyBh-4FWpJ8DWP5B5Vw6uQrbzwxmakxX_o8",
+      authDomain: "atis-database.firebaseapp.com",
+      databaseURL: "https://atis-database-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "atis-database",
+      storageBucket: "atis-database.appspot.com",
+      messagingSenderId: "455303908965",
+      appId: "1:455303908965:web:faad4b06c8a6e53239808c",
+      measurementId: "G-TCJ6SN5FV5"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getDatabase();
+
+    //CALLBACK FUNCTIONS
+    $(document).ready(function () {
+        try {
+            get_API_data();
+            setInterval(() => {
+                bin_status();
+            }, 3600);
+        } finally {
+            for_date();
+            buttons();
+            loadDatabase();
+        }
+    });
+
+    function for_date() {
+        var date_now = $.datepicker.formatDate('MM dd, yy', new Date());
+        $('#date').html(date_now);
+    }
+
+    function bin_status() {
+        //Main variable
+        var bin1;
+        var bin2;
+        var bin3;
+        var bin4;
+        var bin5;
+
+        //Changing depending to API
+        var storedObject = localStorage.getItem('BinStatus');
+        console.log(storedObject);
+        if (storedObject !== null) {
+            var parsedObject = JSON.parse(storedObject);
+            bin1 = parsedObject['bin-1'];
+            bin2 = parsedObject['bin-2'];
+            bin3 = parsedObject['bin-3'];
+            bin4 = parsedObject['bin-4'];
+            bin5 = parsedObject['bin-5'];
+        } else {
+            bin1 = 70;
+            bin2 = 70;
+            bin3 = 70;
+            bin4 = 70;
+            bin5 = 70;
+        }
+        //types of bin status
+        var stat1 = 1; //half full
+        var stat2 = 2; //minimal
+        var stat3 = 3; //empty
+        var stat4 = 4; //full
+        var stat5 = 5; //error
+
+        var stata = "HALF-FULL";
+        var statb = "MINIMAL";
+        var statc = "EMPTY";
+        var statd = "FULL";
+        var state = "ERROR";
+
+        //bin image images
+        var hf_img = "images/sidebar/yellowbin.png";
+        var min_img = "images/sidebar/bluebin.png";
+        var emp_img = "images/sidebar/emptybin.png";
+        var full_img = "images/sidebar/fullbin.png";
+        var err_img = "images/sidebar/errorbin.png"
+
+        const bins = [
+            { btn: '#bin_btn1', img: '#bin_img1', value: bin1 },
+            { btn: '#bin_btn2', img: '#bin_img2', value: bin2 },
+            { btn: '#bin_btn3', img: '#bin_img3', value: bin3 },
+            { btn: '#bin_btn4', img: '#bin_img4', value: bin4 },
+            { btn: '#bin_btn5', img: '#bin_img5', value: bin5 },
+        ];
+
+        // Loop over the bins and set the values accordingly
+        for (let i = 0; i < bins.length; i++) {
+            const bin = bins[i];
+            const value = bin.value;
+
+            if (value >= 24 && value <= 47) {
+                $(bin.btn).attr('data-stat', stata);
+                $(bin.img).attr('src', hf_img);
+            } else if (value >= 48 && value <= 67) {
+                $(bin.btn).attr('data-stat', statb);
+                $(bin.img).attr('src', min_img);
+            } else if (value<=68 && value>=70) {
+                $(bin.btn).attr('data-stat', statc);
+                $(bin.img).attr('src', emp_img);
+            } else if (value >= 2 && value <= 23) {
+                $(bin.btn).attr('data-stat', statd);
+                $(bin.img).attr('src', full_img);
+            } else if (value <= 0 || value >=71) {
+                $(bin.btn).attr('data-stat', state);
+                $(bin.img).attr('src', err_img);
+            }
+        }
+    }
+
+    function buttons() {
+        $('#bin_btn1').click(function () {
+            var loc1 = $(this).attr('data-loc');
+            var id1 = $(this).attr('data-id');
+            var val1 = $(this).attr('data-value');
+            var img1 = $('#bin_img1').attr('src');
+            var stat1 = $(this).attr('data-stat');
+            $('#bin_loc').html(loc1);
+            $('#bin_id').html(id1);
+            $('#bin_img').attr('src', img1);
+            $('#bin_stat').html(stat1);
+            run_algo([3, 3], reinstate_path(), 552);
+
+        });
+        $('#bin_btn2').click(function () {
+            var loc2 = $(this).attr('data-loc');
+            var id2 = $(this).attr('data-id');
+            var val2 = $(this).attr('data-value');
+            var img2 = $('#bin_img2').attr('src');
+            var stat2 = $(this).attr('data-stat');
+            $('#bin_loc').html(loc2);
+            $('#bin_id').html(id2);
+            $('#bin_img').attr('src', img2);
+            $('#bin_stat').html(stat2);
+            run_algo([9, 3], reinstate_path(), 627);
+
+        });
+        $('#bin_btn3').click(function () {
+            var loc3 = $(this).attr('data-loc');
+            var id3 = $(this).attr('data-id');
+            var val3 = $(this).attr('data-value');
+            var img3 = $('#bin_img3').attr('src');
+            var stat3 = $(this).attr('data-stat');
+            $('#bin_loc').html(loc3);
+            $('#bin_id').html(id3);
+            $('#bin_img').attr('src', img3);
+            $('#bin_stat').html(stat3);
+            run_algo([0, 10], reinstate_path(), 482);
+
+        });
+        $('#bin_btn4').click(function () {
+            var loc4 = $(this).attr('data-loc');
+            var id4 = $(this).attr('data-id');
+            var val4 = $(this).attr('data-value');
+            var img4 = $('#bin_img4').attr('src');
+            var stat4 = $(this).attr('data-stat');
+            $('#bin_loc').html(loc4);
+            $('#bin_id').html(id4);
+            $('#bin_img').attr('src', img4);
+            $('#bin_stat').html(stat4);
+            run_algo([9, 9], reinstate_path(), 351);
+
+        });
+        $('#bin_btn5').click(function () {
+            var loc5 = $(this).attr('data-loc');
+            var id5 = $(this).attr('data-id');
+            var val5 = $(this).attr('data-value');
+            var img5 = $('#bin_img5').attr('src');
+            var stat5 = $(this).attr('data-stat');
+            $('#bin_loc').html(loc5);
+            $('#bin_id').html(id5);
+            $('#bin_img').attr('src', img5);
+            $('#bin_stat').html(stat5);
+            run_algo([11, 13], reinstate_path(), 296);
+
+        });
+    }
+
+    function reinstate_path() {
+        var bsu = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 3, 0, 0, 0, 0, 1, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+            [6, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+            [0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+            [0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0],
+            [0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0],
+            [0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0],
+            [0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0],
+            [0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0],
+            [0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0],
+            [0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 4, 0, 0, 0, 0, 8, 0],
+        ];
+        return bsu;
+    }
+    function get_API_data() {
+        const appId = "bulsu-lora-bin";
+        const devId1 = "bin-1";
+        const devId2 = "bin-2";
+        const devId3 = "bin-3";
+        const devId4 = "bin-4";
+        const devId5 = "bin-5";
+        const apiKey = 'AEO5BYYNBDURPIYFECSVUJD45X3G2WWKJDZCDYY.27T7EP5MBZQVRRBXK5IL3RDRT3ZCHLMQOWPHFFYD2U7JOY4TQBIQ';
+        const apiUrl = 'https://au1.cloud.thethings.network/api/v3/events';
+        const authToken = `Bearer NNSXS.${apiKey}`;
+        const contentType = 'application/json';
+        const userAgent = 'my-integration/my-integration-version';
+
+        const requestData = {
+            identifiers: [
+                {
+                    device_ids: {
+                        device_id: devId1,
+                        application_ids: { application_id: appId }
+                    }
+                },
+                {
+                    device_ids: {
+                        device_id: devId2,
+                        application_ids: { application_id: appId }
+                    }
+                },
+                {
+                    device_ids: {
+                        device_id: devId3,
+                        application_ids: { application_id: appId }
+                    }
+                },
+                {
+                    device_ids: {
+                        device_id: devId4,
+                        application_ids: { application_id: appId }
+                    }
+                },
+                {
+                    device_ids: {
+                        device_id: devId5,
+                        application_ids: { application_id: appId }
+                    }
+                }
+            ]
+        };
+
+        const requestHeaders = new Headers({
+            'Authorization': authToken,
+            'Accept': 'text/event-stream',
+            'Content-Type': contentType,
+            'User-Agent': userAgent
+        });
+
+        const requestOptions = {
+            method: 'POST',
+            headers: requestHeaders,
+            body: JSON.stringify(requestData)
+        };
+
+        fetch(apiUrl, requestOptions)
+            .then(response => {
+                const reader = response.body.getReader();
+                let buffer = '';
+                let deviceData = {};
+                let messageDatas = {};
+                return reader.read().then(function processText({ done, value }) {
+                    if (done) {
+                        return;
+                    }
+
+                    buffer += new TextDecoder().decode(value);
+                    const messages = buffer.split('\n\n');
+                    buffer = messages.pop();
+
+                    for (const message of messages) {
+                        const messageObject = JSON.parse(message); // Parse the message string into a JSON object
+
+                        if (messageObject.result.name === "as.up.data.forward") { // Filter for uplink messages
+                            console.log(messageObject);
+                            const devIds = messageObject.result?.identifiers?.[0]?.device_ids?.device_id;
+                            const binValue = messageObject.result?.data?.uplink_message?.decoded_payload?.text;
+                            const binTime = messageObject.result?.data?.uplink_message?.received_at;
+
+                            const timestamp = binTime;
+                            const date = new Date(timestamp);
+
+                            // Convert to Philippine time
+                            const localTime = date.toLocaleString('en-PH', { timeZone: 'Asia/Manila' });
+
+                            // Get the date component in YYYY-MM-DD format
+                            const dateString = localTime.split(',')[0];
+
+                            // Get the time component in HH:MM:SS format
+                            const timeString = localTime.split(',')[1].trim();
+
+                            if (!messageDatas[timeString]) {
+                                messageDatas[dateString] = [];
+                            }
+                            messageDatas[dateString].push({Time : timeString, Bin : devIds, Value : binValue});
+                            console.log(messageDatas);
+                            console.log(binValue);
+                            console.log(devIds);
+                            switch (devIds) {
+                                case devId1:
+                                    deviceData[devId1] = parseInt(binValue);
+                                    break;
+                                case devId2:
+                                    deviceData[devId2] = parseInt(binValue);
+                                    break;
+                                case devId3:
+                                    deviceData[devId3] = parseInt(binValue);
+                                    break;
+                                case devId4:
+                                    deviceData[devId4] = parseInt(binValue);
+                                    break;
+                                case devId5:
+                                    deviceData[devId5] = parseInt(binValue);
+                                    break;
+                                default:
+                                    break;
+                            }
+                            console.log(deviceData);
+                            localStorage.setItem('BinStatus', JSON.stringify(deviceData));
+                            savetoDatabase(messageDatas);
+                        }
+                    }
+
+                    return reader.read().then(processText);
+                });
+            })
+            .catch(error => {
+                console.error(error);
+                console.log(error.message);
+            });
+    }
+    
+    function savetoDatabase(logData) {
+    const dbRef = ref(db, "Data/");
+        for (const dateKey in logData) {
+            if (Object.hasOwnProperty.call(logData, dateKey)) {
+            const dateObj = logData[dateKey];
+            const dateRef = child(dbRef, dateKey);
+            get(dateRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                // Datekey already exists, update it
+                for (const {Time, Bin, Value} of dateObj) {
+                    const childRef = child(dateRef, `/${Time}`);
+                    set(childRef, {
+                    Bin: Bin,
+                    Status: Value
+                    }).then(() => {
+                    console.log(`Data saved for ${dateKey} /${Time}`);
+                    }).catch((error) => {
+                    console.error(`Error saving data for ${dateKey} /${Time}: ${error}`);
+                    });
+                }
+                } else {
+                // Datekey does not exist, create it
+                const newDateObj = {};
+                for (const {Time, Bin, Value} of dateObj) {
+                    newDateObj[Time] = {
+                    Bin: Bin,
+                    Status: Value
+                    };
+                }
+                set(dateRef, newDateObj).then(() => {
+                    console.log(`Data saved for ${dateKey}`);
+                }).catch((error) => {
+                    console.error(`Error saving data for ${dateKey}: ${error}`);
+                });
+                }
+            }).catch((error) => {
+                console.error(`Error checking if ${dateKey} exists: ${error}`);
+            });
+            }
+        }
+    }
+
+
+
+    function loadDatabase(){
+        const dbRef = ref(db, 'Data');
+        get(dbRef).then((snapshot) => {
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            // Use the loaded data here
+            for (const dateKey in data) {
+                if (Object.hasOwnProperty.call(data, dateKey)) {
+                    const dateObj = data[dateKey];
+                    for (const timeKey in dateObj) {
+                        if (Object.hasOwnProperty.call(dateObj, timeKey)) {
+                            const {Bin, Status} = dateObj[timeKey];
+                            console.log(`Date: ${dateKey}, Time: ${timeKey}, Bin: ${Bin}, Status: ${Status}`);
+                        }
+                    }
+                }
+            }
+        } else {
+            console.log('No data available');
+        }
+        }).catch((error) => {
+        console.error(error);
+        });
+    }
+
+    function antColonyDijkstra(bsu, startCoord, endCoord, numAnts, iterations) {
+        const distances = [];
+        const visited = [];
+        const prev = [];
+        const rows = bsu.length;
+        const cols = bsu[0].length;
+        const direction = [
+            [-1, 0],
+            [1, 0],
+            [0, -1],
+            [0, 1],
+        ];
+        const pheromones = new Array(rows * cols).fill(0.1);
+
+        // Initialize distances, visited, and prev arrays
+        for (let i = 0; i < rows; i++) {
+            distances[i] = new Array(cols).fill(Number.MAX_SAFE_INTEGER);
+            visited[i] = new Array(cols).fill(false);
+            prev[i] = new Array(cols).fill(null); // initialized to null
+        }
+
+        let start = startCoord,
+            end = [];
+
+        // Find end points
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+                if (bsu[i][j] === 9) {
+                    end.push([i, j]);
+                }
+            }
+        }
+
+        for (let it = 0; it < iterations; it++) {
+            // Traverse the graph using Dijkstra's algorithm, biased by pheromones
+            for (let ant = 0; ant < numAnts; ant++) {
+                let [currRow, currCol] = start;
+                let dist = 0;
+
+                while (true) {
+                    visited[currRow][currCol] = true;
+
+                    // Update pheromone trail and distances
+                    let idx = currRow * cols + currCol;
+                    pheromones[idx] += 1.0 / (dist + 1);
+                    distances[currRow][currCol] = Math.min(
+                        distances[currRow][currCol],
+                        dist
+                    );
+
+                    // Check if endpoint has been reached
+                    if (currRow === endCoord[0] && currCol === endCoord[1]) {
+                        break;
+                    }
+
+                    let maxPheromone = 0;
+                    let probs = [];
+                    let probSum = 0;
+
+                    // Calculate the probability of moving to each neighbor node
+                    for (let d = 0; d < 4; d++) {
+                        let [nextRow, nextCol] = [
+                            currRow + direction[d][0],
+                            currCol + direction[d][1],
+                        ];
+                        if (
+                            nextRow >= 0 &&
+                            nextRow < rows &&
+                            nextCol >= 0 &&
+                            nextCol < cols &&
+                            !visited[nextRow][nextCol] &&
+                            bsu[nextRow][nextCol] !== 0
+                        ) {
+                            let idx = nextRow * cols + nextCol;
+                            let pher = pheromones[idx];
+                            let dist2 = distances[currRow][currCol] + 1;
+                            let prob = Math.pow(pher, 1) / Math.pow(dist2, 2);
+                            probs.push(prob);
+                            probSum += prob;
+                            if (pher > maxPheromone) {
+                                maxPheromone = pher;
+                            }
+                        } else {
+                            probs.push(0);
+                        }
+                    }
+                    if (probSum === 0) {
+                        let [prevRow, prevCol] = prev[currRow][currCol];
+                        [currRow, currCol] = [prevRow, prevCol];
+                        dist--;
+                        continue;
+                    }
+
+                    // Choose the next move based on the probabilities
+                    let rand = Math.random() * probSum;
+                    let probAcc = 0;
+                    let nextRow, nextCol;
+
+                    for (let d = 0; d < 4; d++) {
+                        nextRow = currRow + direction[d][0];
+                        nextCol = currCol + direction[d][1];
+
+                        if (
+                            nextRow >= 0 &&
+                            nextRow < rows &&
+                            nextCol >= 0 &&
+                            nextCol < cols &&
+                            !visited[nextRow][nextCol] &&
+                            bsu[nextRow][nextCol] !== 0
+                        ) {
+                            probAcc += probs[d];
+                            if (rand <= probAcc) {
+                                break;
+                            }
+                        }
+                    }
+
+                    // Update current node and distance
+                    dist++;
+                    prev[nextRow][nextCol] = [currRow, currCol];
+                    [currRow, currCol] = [nextRow, nextCol];
+                }
+
+                // Update start node for the next ant
+                start = endCoord;
+            }
+
+            // Update pheromone trail evaporation and decay
+            for (let i = 0; i < rows * cols; i++) {
+                pheromones[i] *= 0.99;
+                pheromones[i] = Math.max(pheromones[i], 0.1);
+            }
+        }
+
+        // Trace back the optimal path using the prev array
+        let path = [endCoord];
+        let [currRow, currCol] = endCoord;
+
+        while (prev[currRow][currCol] !== null) {
+            let [prevRow, prevCol] = prev[currRow][currCol];
+            path.unshift([prevRow, prevCol]);
+            [currRow, currCol] = [prevRow, prevCol];
+        }
+
+        let shortestPath = [];
+        let curr = endCoord;
+        while (prev[curr[0]][curr[1]] !== null) {
+            shortestPath.unshift(curr);
+            curr = prev[curr[0]][curr[1]];
+        }
+
+        // Map the return path to the bsu array as num 5
+        for (let i = shortestPath.length - 1; i >= 0; i--) {
+            const row = shortestPath[i][0];
+            const col = shortestPath[i][1];
+            bsu[row][col] = 5;
+        }
+
+        // Return the bsu array with the path mapped as num 5
+        return bsu;
+    }
+
+    function run_algo(start_algo, bsu, value) {
+        var bsuCopy = JSON.parse(JSON.stringify(bsu));
+        const startCoord = start_algo;
+        const endCoord = [0, 18];
+        let numAnts = 10;
+        let iterations = 10;
+        let shortestPath = new antColonyDijkstra(
+            bsu,
+            startCoord,
+            endCoord,
+            numAnts,
+            iterations
+        );
+        var pathValue = 0;
+        pathValue = ((shortestPath[3][0] == 5 && shortestPath[3][1] == 5 && shortestPath[3][2] == 5 && shortestPath[3][3] == 5) ? 64 : 0)
+            + ((shortestPath[4][3] == 5 && shortestPath[5][3] == 5 && shortestPath[6][3] == 5 && shortestPath[7][3] == 5) ? 84 : 0)
+            + ((shortestPath[8][1] == 5 && shortestPath[8][2] == 5 && shortestPath[8][3] == 5) ? 36 : 0)
+            + ((shortestPath[9][1] == 5 && shortestPath[10][1] == 5) ? 27 : 0)
+            + ((shortestPath[11][1] == 5 && shortestPath[11][2] == 5 && shortestPath[11][3] == 5 && shortestPath[11][4] == 5 && shortestPath[11][5] == 5 && shortestPath[11][6] == 5) ? 75 : 0)
+            + ((shortestPath[9][6] == 5 && shortestPath[10][6] == 5) ? 25 : 0)
+            + ((shortestPath[8][4] == 5 && shortestPath[8][5] == 5 && shortestPath[8][6] == 5) ? 38 : 0)
+            + ((shortestPath[4][6] == 5 && shortestPath[5][6] == 5 && shortestPath[6][6] == 5 && shortestPath[7][6] == 5) ? 82 : 0)
+            + ((shortestPath[3][4] == 5 && shortestPath[3][5] == 5 && shortestPath[3][6] == 5) ? 45 : 0)
+            + ((shortestPath[3][7] == 5 && shortestPath[3][8] == 5 && shortestPath[3][9] == 5 && shortestPath[3][10] == 5) ? 65 : 0)
+            + ((shortestPath[1][10] == 5 && shortestPath[1][11] == 5 && shortestPath[1][12] == 5 && shortestPath[1][13] == 5) ? 34 : 0)
+            + ((shortestPath[2][10] == 5) ? 40 : 0)
+            + ((shortestPath[4][10] == 5) ? 48 : 0)
+            + ((shortestPath[6][10] == 5 && shortestPath[7][10] == 5 && shortestPath[8][10] == 5) ? 43 : 0)
+            + ((shortestPath[10][10] == 5 && shortestPath[11][10] == 5 && shortestPath[12][10] == 5 && shortestPath[13][10] == 5 && shortestPath[14][10] == 3) ? 38 : 0)
+            + ((shortestPath[5][10] == 5 && shortestPath[5][11] == 5 && shortestPath[5][12] == 5 && shortestPath[5][13] == 5) ? 49 : 0)
+            + ((shortestPath[9][10] == 5 && shortestPath[9][11] == 5 && shortestPath[9][12] == 5 && shortestPath[9][13] == 5) ? 55 : 0)
+            + ((shortestPath[6][13] == 5 && shortestPath[7][13] == 5 && shortestPath[8][13] == 5) ? 56 : 0)
+            + ((shortestPath[11][13] == 5 && shortestPath[12][13] == 5 && shortestPath[13][13] == 5 && shortestPath[14][13] == 5) ? 15 : 0)
+            + ((shortestPath[11][14] == 5 && shortestPath[11][15] == 5 && shortestPath[11][16] == 5 && shortestPath[11][17] == 5 && shortestPath[11][18] == 5) ? 115 : 0)
+            + ((shortestPath[0][18] == 5 && shortestPath[1][18] == 5 && shortestPath[2][18] == 5 && shortestPath[3][18] == 5 && shortestPath[4][18] == 5 && shortestPath[5][18] == 5 && shortestPath[6][18] == 5 && shortestPath[7][18] == 5 && shortestPath[8][18] == 5 && shortestPath[9][18] == 5 && shortestPath[10][18] == 5) ? 181 : 0)
+            + ((shortestPath[12][18] == 5 && shortestPath[13][18] == 5 && shortestPath[14][18] == 5) ? 78 : 0);
+
+        if (pathValue != value) {
+            bsuCopy[5][3] = 0;
+            bsuCopy[11][3] = 0;
+            bsuCopy[5][13] = 0;
+            let shortestPathModify = new antColonyDijkstra(
+                bsuCopy,
+                startCoord,
+                endCoord,
+                numAnts,
+                iterations
+            );
+            output_path(shortestPathModify);
+            console.log(shortestPathModify);
+        } else if (pathValue == value) {
+            output_path(shortestPath);
+            console.log(shortestPath);
+        }
+    }
+
+    function output_path(path) {
+        let shortestPath = path;
+        var output = '';
+        output += '\n<div id="path_container" class="placeholder-glow">\n';
+        if (shortestPath[3][0] == 5 && shortestPath[3][1] == 5 && shortestPath[3][2] == 5 && shortestPath[3][3] == 5) {
+            output += '<div id="A" class="placeholder col-12 absolute h-[2.3%] w-[22%] bg-[#F53180] opacity-80 top-[22.5%] left-[1%] rounded-2xl" style="transform: rotate(1deg);"></div>';
+        } else {
+            output += '<div id="A" class="road"></div>';
+        }
+
+        if (shortestPath[4][3] == 5 && shortestPath[5][3] == 5 && shortestPath[6][3] == 5 && shortestPath[7][3] == 5) {
+            output += '<div id="B" class="placeholder col-12 absolute h-[2.3%] w-[23%] bg-[#F53180] opacity-80 top-[39%] left-[11.5%] rounded-2xl" style="transform: rotate(86.7deg);"></div>';
+        } else {
+            output += '<div id="B" class="road"></div>';
+        }
+
+        if (shortestPath[8][1] == 5 && shortestPath[8][2] == 5 && shortestPath[8][3] == 5) {
+            output += '<div id="C"   class="placeholder col-12 absolute h-[2.3%] w-[11.5%] bg-[#F53180] opacity-80 top-[55%] left-[13%] rounded-2xl" style="transform: rotate(-4deg);"></div>';
+        } else {
+            output += '<div id="C" class="road"></div>';
+        }
+
+        if (shortestPath[9][1] == 5 && shortestPath[10][1] == 5) {
+            output += '<div id="D"   class="placeholder col-12 absolute h-[2.3%] w-[9.5%] bg-[#F53180] opacity-80 top-[61%] left-[9.5%] rounded-2xl" style="transform: rotate(87deg);"></div>';
+        } else {
+            output += '<div id="D" class="road"></div>';
+        }
+
+        if (shortestPath[11][1] == 5 && shortestPath[11][2] == 5 && shortestPath[11][3] == 5 && shortestPath[11][4] == 5 && shortestPath[11][5] == 5 && shortestPath[11][6] == 5) {
+            output += '<div id="E"   class="placeholder col-12 absolute h-[2.3%] w-[19.5%] bg-[#F53180] opacity-80 top-[66.5%] left-[13.5%] rounded-2xl" style="transform: rotate(-4.5deg);"></div>';
+        } else {
+            output += '<div id="E" class="road"></div>';
+        }
+
+        if (shortestPath[9][6] == 5 && shortestPath[10][6] == 5) {
+            output += '<div id="F"   class="placeholder col-12 absolute h-[2.3%] w-[9.5%] bg-[#F53180] opacity-80 top-[59.5%] left-[27.5%] rounded-2xl" style="transform: rotate(86deg);"></div>';
+        } else {
+            output += '<div id="F" class="road"></div>';
+        }
+
+        if (shortestPath[8][4] == 5 && shortestPath[8][5] == 5 && shortestPath[8][6] == 5) {
+            output += '<div id="G"   class="placeholder col-12 absolute h-[2.3%] w-[11.5%] bg-[#F53180] opacity-80 top-[54%] left-[23.5%] rounded-2xl" style="transform: rotate(-4deg);"></div>';
+        } else {
+            output += '<div id="G" class="road"></div>';
+        }
+        if (shortestPath[8][6] == 5 && shortestPath[8][5] != 5 && shortestPath[8][6] != 5) {
+            output += '<div id="G2"   class="placeholder col-12 absolute h-[2.5%] w-[3.5%] bg-[#F53180] opacity-80 top-[53.5%] left-[31.5%] rounded-2xl" style="transform: rotate(-4deg);"></div>';
+        } else {
+            output += '<div id="G2" class="road"></div>';
+        }
+
+        if (shortestPath[4][6] == 5 && shortestPath[5][6] == 5 && shortestPath[6][6] == 5 && shortestPath[7][6] == 5) {
+            output += '<div id="H"   class="placeholder col-12 absolute h-[2.3%] w-[22.5%] bg-[#F53180] opacity-80 top-[38%] left-[22.5%] rounded-2xl" style="transform: rotate(88deg);"></div>';
+        } else {
+            output += '<div id="H" class="road"></div>';
+        }
+
+        if (shortestPath[3][4] == 5 && shortestPath[3][5] == 5 && shortestPath[3][6] == 5) {
+            output += '<div id="I"   class="placeholder col-12 absolute h-[2.3%] w-[12%] bg-[#F53180] opacity-80 top-[22.8%] left-[22%] rounded-2xl" style="transform: rotate(1deg);"></div>';
+        } else {
+            output += '<div id="I" class="road"></div>';
+        }
+
+        if (shortestPath[3][7] == 5 && shortestPath[3][8] == 5 && shortestPath[3][9] == 5 && shortestPath[3][10] == 5) {
+            output += ' <div id="J"   class="placeholder col-12 absolute h-[2.3%] w-[18.5%] bg-[#F53180] opacity-80 top-[23%] left-[33%] rounded-2xl" style="transform: rotate(deg);"></div>';
+        } else {
+            output += '<div id="J" class="road"></div>';
+        }
+
+        if (shortestPath[1][10] == 5 && shortestPath[1][11] == 5 && shortestPath[1][12] == 5 && shortestPath[1][13] == 5) {
+            output += '<div id="K"   class="placeholder col-12 absolute h-[3.5%] w-[13.2%] bg-[#F53180] opacity-80 top-[8.5%] left-[50%] rounded-2xl" style="transform: rotate(-1deg);"></div>';
+        } else {
+            output += '<div id="K" class="road"></div>';
+        }
+
+        if (shortestPath[2][10] == 5) {
+            output += '<div id="L"   class="placeholder col-12 absolute h-[2.3%] w-[11%] bg-[#F53180] opacity-80 top-[15.5%] left-[45.3%] rounded-2xl" style="transform: rotate(91.2deg);"></div>';
+        } else {
+            output += '<div id="L" class="road"></div>';
+        }
+
+        if (shortestPath[4][10] == 5) {
+            output += '<div id="M"   class="placeholder col-12 absolute h-[2.3%] w-[16%] bg-[#F53180] opacity-80 top-[34%] left-[42.5%] rounded-2xl" style="transform: rotate(91.6deg);"></div>';
+        } else {
+            output += '<div id="M" class="road"></div>';
+        }
+
+        if (shortestPath[6][10] == 5 && shortestPath[7][10] == 5 && shortestPath[8][10] == 5) {
+            output += '<div id="N"   class="placeholder col-12 absolute h-[2.3%] w-[13%] bg-[#F53180] opacity-80 top-[53.5%] left-[43.6%] rounded-2xl" style="transform: rotate(91.8deg);"></div>';
+        } else {
+            output += '<div id="N" class="road"></div>';
+        }
+
+        if (shortestPath[10][10] == 5 && shortestPath[11][10] == 5 && shortestPath[12][10] == 5 && shortestPath[13][10] == 5 && shortestPath[14][10] == 3) {
+            output += '<div id="O"   class="placeholder col-12 absolute h-[2.3%] w-[9%] bg-[#F53180] opacity-80 top-[68.5%] left-[45.4%] rounded-2xl" style="transform: rotate(91.8deg);"></div>';
+        } else {
+            output += '<div id="O" class="road"></div>';
+        }
+
+        if (shortestPath[5][10] == 5 && shortestPath[5][11] == 5 && shortestPath[5][12] == 5 && shortestPath[5][13] == 5) {
+            output += '<div id="P"   class="placeholder col-12 absolute h-[2.3%] w-[16.5%] bg-[#F53180] opacity-80 top-[45%] left-[49.5%] rounded-2xl" style="transform: rotate(-1deg);"></div>';
+        } else {
+            output += '<div id="P" class="road"></div>';
+        }
+
+        if (shortestPath[9][10] == 5 && shortestPath[9][11] == 5 && shortestPath[9][12] == 5 && shortestPath[9][13] == 5) {
+            output += '<div id="Q"   class="placeholder col-12 absolute h-[2.3%] w-[17%] bg-[#F53180] opacity-80 top-[62.6%] left-[49.1%] rounded-2xl" style="transform: rotate(.3deg);"></div>';
+        } else {
+            output += '<div id="Q" class="road"></div>';
+        }
+
+        if (shortestPath[10][13] == 5) {
+            output += '<div id="Q2"   class="placeholder col-12 absolute h-[2.3%] w-[4%] bg-[#F53180] opacity-80 top-[64.6%] left-[63.5%] rounded-2xl" style="transform: rotate(90deg);"></div>';
+        } else {
+            output += '<div id="Q2" class="road"></div>';
+        }
+
+        if (shortestPath[6][13] == 5 && shortestPath[7][13] == 5 && shortestPath[8][13] == 5) {
+            output += ' <div id="R"   class="placeholder col-12 absolute h-[2.3%] w-[16%] bg-[#F53180] opacity-80 top-[55.3%] left-[57.5%] rounded-2xl" style="transform: rotate(90.3deg);"></div>';
+        } else {
+            output += '<div id="R" class="road"></div>';
+        }
+
+        if (shortestPath[11][13] == 5 && shortestPath[12][13] == 5 && shortestPath[13][13] == 5 && shortestPath[14][13] == 5) {
+            output += '<div id="S"   class="placeholder col-12 absolute h-[2.3%] w-[7.5%] bg-[#F53180] opacity-80 top-[70.4%] left-[61.7%] rounded-2xl" style="transform: rotate(90.3deg);"></div>';
+        } else {
+            output += '<div id="S" class="road"></div>';
+        }
+
+        if (shortestPath[11][14] == 5 && shortestPath[11][15] == 5 && shortestPath[11][16] == 5 && shortestPath[11][17] == 5 && shortestPath[11][18] == 5) {
+            output += '<div id="T"   class="placeholder col-12 absolute h-[2.3%] w-[31.5%] bg-[#F53180] opacity-80 top-[66.4%] left-[65%] rounded-2xl" style="transform: rotate(.3deg);"></div>';
+        } else {
+            output += '<div id="T" class="road"></div>';
+        }
+
+        if (shortestPath[0][18] == 5 && shortestPath[1][18] == 5 && shortestPath[2][18] == 5 && shortestPath[3][18] == 5 && shortestPath[4][18] == 5 && shortestPath[5][18] == 5 && shortestPath[6][18] == 5 && shortestPath[7][18] == 5 && shortestPath[8][18] == 5 && shortestPath[9][18] == 5 && shortestPath[10][18] == 5) {
+            output += '<div id="U"   class="placeholder col-12 absolute h-[2.3%] w-[46%] bg-[#F53180] opacity-80 top-[33.5%] left-[72.4%] rounded-2xl" style="transform: rotate(89deg);"></div>';
+        } else {
+            output += '<div id="U" class="road"></div>';
+        }
+
+        if (shortestPath[12][18] == 5 && shortestPath[13][18] == 5 && shortestPath[14][18] == 5) {
+            output += '<div id="V"   class="placeholder col-12 absolute h-[2.3%] w-[22%] bg-[#F53180] opacity-80 top-[81%] left-[85%] rounded-2xl" style="transform: rotate(89deg);"></div>';
+        } else {
+            output += '<div id="V" class="road"></div>';
+        }
+        output += '\n</div>'
+        document.getElementById('line-div').innerHTML = output;
+    }
+  </script>
+</head>
+<!-- HEAD END  -->
+
+<!-- BODY START -->
+
+<body class="bg-[#1C1D2F] ">
+  <!-- TODO MAIN CONTAINER START -->
+  <div class="flex items-start justify-center w-full h-full bg-[#1C1D2F]">
+    <!-- TODO SIDE BAR SECTION START -->
+
+    <!-- TODO SIDE BAR SECTION END -->
+
+    <!-- TODO BODY CONTAINER START -->
+    <div class="flex flex-col w-full">
+      <!-- TODO NAV BAR SECTION START -->
+      <div class="w-full h-30 mt-3  border-color-white ">
+        <div class="flex w-full h-full justify-end items-center md:space-x-6 lg:space-x-14 md:pr-8 lg:pr-16 ">
+          <!-- LOGO SECTION START -->
+          <div class="h-28 w-full flex items-center justify-start space-x-4 px-5  border-color-white">
+            <div>
+              <img class="w-16" src="images/sidebar/atislogo.png" alt="" />
+            </div>
+            <div class="xs:hidden sm:hidden md:hidden lg:flex flex-col">
+              <h1 class="text-white" style="font-size: 10px">AUTOMATION TECHNOLOGIES</h1>
+              <h1 class="text-white" style="font-size: 10px">INFORMATION SYSTEM</h1>
+            </div>
+          </div>
+          <!-- LOGO SECTION END -->
+          <div class="flex space-x-[8%] w-full justify-end flex-shrink">
+            <div class="flex space-x-4 ">
+              <div class="flex h-full justify-center items-center">
+                <img class="md:w-8 lg:w-10" src="images/navbar/location.png" alt="" />
+              </div>
+              <div>
+                <h1 class="text-xs text-white font-thin">LOCATION:</h1>
+                <h1 class="md:text-xs lg:text-sm text-white">
+                  BULACAN STATE UNIVERSITY
+                </h1>
+              </div>
+            </div>
+
+            <div class="flex space-x-4 ">
+              <div class="flex h-full justify-center items-center">
+                <img class="md:w-8 lg:w-10" src="images/navbar/date.png" alt="" />
+              </div>
+              <div>
+                <h1 class="text-xs text-white font-thin">DATE:</h1>
+                <h1 class="md:text-xs lg:text-sm text-white" id="date"></h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- TODO NAVBAR SECTION END -->
+
+      <!-- TODO MAP SECTION START -->
+      <div class=" p-8 w-full h-full flex items-center justify-center">
+        <div class="w-fit h-fit  relative">
+
+          <!-- BULSU MAP START -->
+          <div>
+            <img class="w-[1150px]" src="images/map/MAP1.png" alt="" />
+          </div>
+          <!-- BULSU MAP END -->
+
+          <!-- TODO BIN STATUS START -->
+          <div>
+            <h1 class="text-[8px] xs:text-xs text-light text-white absolute top-[14.5%] left-[67.5%] z-10">
+              BIN ID
+            </h1>
+            <h1
+              class="lg:text-[26px] md:text-[23px] sm:text-[18px] text-bold text-white absolute top-[16%] left-[67.5%] z-10"
+              id="bin_id">
+              BIN 3
+            </h1>
+
+            <h1 class="text-[8px] xs:text-xs text-extralight text-white absolute top-[14.5%] left-[78.9%] z-10">
+              BIN LOCATION
+            </h1>
+            <h1
+              class="w-2 lg:text-[18px] md:text-[12px] sm:text-[8px] lg:pt-0 md:pt-0 sm:pt-1 text-bold text-white absolute top-[16.5%] left-[79%] z-10"
+              id="bin_loc">
+              NATIVIDAD HALL
+            </h1>
+            <img class="w-[9%] absolute top-[24%] left-[66.5%] z-10" id="bin_img" src="images/sidebar/emptybin.png"
+              alt="" />
+
+            <h1 class="text-[8px] xs:text-xs text-extralight text-white absolute top-[27%] left-[78.9%] z-10">
+              BIN STATUS
+            </h1>
+
+            <h1
+              class=" lg:text-[18px] md:text-[13px] sm:text-[12px] text-bold text-white absolute top-[28.5%] left-[79%] z-10"
+              id="bin_stat">
+              ERROR
+            </h1>
+          </div>
+          <!-- TODO BIN STATUS END -->
+
+          <!-- TODO | MAP BIN START -->
+          <div class="try" id="try">
+            <!-- BIN 1 START -->
+            <a href="#b1" id="bin_btn1" data-value="1" data-loc="ALVARADO HALL" data-id="BIN 1" data-stat="3">
+              <img id="bin_img1" data-stat="3"
+                class="w-[5%] absolute top-[14.5%] left-[17%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl"
+                src="images/sidebar/yellowbin.png" alt="img_bin1" />
+
+            </a>
+            <!-- BIN 1 END -->
+
+            <!-- BIN 2 START -->
+            <a href="#b2" id="bin_btn2" data-value="2" data-loc="PIMENTEL HALL" data-id="BIN 2" data-stat="3">
+              <img id="bin_img2" data-stat="3"
+                class="w-[5%] absolute top-[57%] left-[19%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl"
+                src="images/sidebar/bluebin.png" alt="img_bin2" />
+
+            </a>
+            <!-- BIN 2 END -->
+
+            <!-- BIN 3 START -->
+            <a href="#b3" id="bin_btn3" data-value="3" data-loc="CHTM BUILDING" data-id="BIN 3" data-stat="3">
+              <img id="bin_img3" data-stat="3"
+                class="w-[5%] absolute top-[8%] left-[45%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl"
+                src="images/sidebar/emptybin.png" alt="img_bin3" />
+
+            </a>
+            <!-- BIN 3 END -->
+
+            <!-- BIN 4 START -->
+            <a href="#b4" id="bin_btn4" data-value="4" data-loc="ROXAS HALL" data-id="BIN 4" data-stat="3">
+              <img id="bin_img4" data-stat="3"
+                class="w-[5%] absolute top-[55%] left-[44%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl"
+                src="images/sidebar/fullbin.png" alt="img_bin4" />
+
+            </a>
+            <!-- BIN 4 END -->
+
+            <!-- BIN 5 START -->
+            <a href="#b5" id="bin_btn5" data-value="5" data-loc="NATIVIDAD HALL" data-id="BIN 5" data-stat="3">
+              <img id="bin_img5" data-stat="3"
+                class="w-[5%] absolute bottom-[25%] left-[59%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl"
+                src="images/sidebar/errorbin.png" alt="img_bin5" />
+
+            </a>
+            <!-- BIN 5 END -->
+          </div>
+          <!-- TODO | MAP BIN END -->
+
+
+          <!-- TODO | LINE START -->
+          <div id="line-div">
+            <div id="path_container" class="placeholder-glow"></div>
+          </div>
+
+          <!-- TODO LINE END -->
+
+
+        </div>
+
+        <!-- TODO MAP SECTION END -->
+      </div>
+      <!-- TODO BODY CONTAINER START -->
+    </div>
+    <!-- TODO MAIN CONTAINER END -->
+</body>
+<!-- BODY END -->
+
+</html>
+<!-- HTML FILE END -->
