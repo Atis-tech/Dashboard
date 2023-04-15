@@ -89,6 +89,7 @@
         } finally {
             for_date();
             buttons();
+            loadDatabase();
         }
     });
 
@@ -116,11 +117,11 @@
             bin4 = parsedObject['bin-4'];
             bin5 = parsedObject['bin-5'];
         } else {
-            bin1 = 0;
-            bin2 = 0;
-            bin3 = 0;
-            bin4 = 0;
-            bin5 = 0;
+            bin1 = 70;
+            bin2 = 70;
+            bin3 = 70;
+            bin4 = 70;
+            bin5 = 70;
         }
         //types of bin status
         var stat1 = 1; //half full
@@ -400,19 +401,73 @@
             });
     }
     
-    function savetoDatabase(logData){
-        var logDate ="";
-        set(ref(db, "Data/" + "Date/" + "Time"),{
-            Bin: "",
-            Status: ""
-        })
-        .then(()=>{
-
-        })
+    function savetoDatabase(logData) {
+    const dbRef = ref(db, "Data/");
+        for (const dateKey in logData) {
+            if (Object.hasOwnProperty.call(logData, dateKey)) {
+            const dateObj = logData[dateKey];
+            const dateRef = child(dbRef, dateKey);
+            get(dateRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                // Datekey already exists, update it
+                for (const {Time, Bin, Value} of dateObj) {
+                    const childRef = child(dateRef, `/${Time}`);
+                    set(childRef, {
+                    Bin: Bin,
+                    Status: Value
+                    }).then(() => {
+                    console.log(`Data saved for ${dateKey} /${Time}`);
+                    }).catch((error) => {
+                    console.error(`Error saving data for ${dateKey} /${Time}: ${error}`);
+                    });
+                }
+                } else {
+                // Datekey does not exist, create it
+                const newDateObj = {};
+                for (const {Time, Bin, Value} of dateObj) {
+                    newDateObj[Time] = {
+                    Bin: Bin,
+                    Status: Value
+                    };
+                }
+                set(dateRef, newDateObj).then(() => {
+                    console.log(`Data saved for ${dateKey}`);
+                }).catch((error) => {
+                    console.error(`Error saving data for ${dateKey}: ${error}`);
+                });
+                }
+            }).catch((error) => {
+                console.error(`Error checking if ${dateKey} exists: ${error}`);
+            });
+            }
+        }
     }
 
+
+
     function loadDatabase(){
-      
+        const dbRef = ref(db, 'Data');
+        get(dbRef).then((snapshot) => {
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            for (const dateKey in data) {
+                if (Object.hasOwnProperty.call(data, dateKey)) {
+                    const dateObj = data[dateKey];
+                    for (const timeKey in dateObj) {
+                        if (Object.hasOwnProperty.call(dateObj, timeKey)) {
+                            const {Bin, Status} = dateObj[timeKey];
+                            console.log(`Date: ${dateKey}, Time: ${timeKey}, Bin: ${Bin}, Status: ${Status}`);
+                        }
+                    }
+                }
+            }
+            // Use the loaded data here
+        } else {
+            console.log('No data available');
+        }
+        }).catch((error) => {
+        console.error(error);
+        });
     }
 
     function antColonyDijkstra(bsu, startCoord, endCoord, numAnts, iterations) {
