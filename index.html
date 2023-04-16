@@ -17,6 +17,7 @@
   <link rel="apple-touch-startup-image" href="/images/favicons/Website Logo .png">
   <link rel="manifest" href="manifest.json">
   <title>WAZTE</title>
+
   <!--BOOTSTRAP/JQUERY/JQUERY UI-->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
@@ -26,6 +27,8 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"
     integrity="sha256-xLD7nhI62fcsEZK2/v8LsBcb4lG7dgULkuXoXB/j91c=" crossorigin="anonymous"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
   <!-- FAVICONS IMPLEMENTATION -->
   <link rel="shortcut icon" href="images/favicons/Website Logo .png" />
@@ -824,7 +827,7 @@
         }
 
         if (shortestPath[0][18] == 5 && shortestPath[1][18] == 5 && shortestPath[2][18] == 5 && shortestPath[3][18] == 5 && shortestPath[4][18] == 5 && shortestPath[5][18] == 5 && shortestPath[6][18] == 5 && shortestPath[7][18] == 5 && shortestPath[8][18] == 5 && shortestPath[9][18] == 5 && shortestPath[10][18] == 5) {
-            output += '<div id="U"   class="placeholder col-12 absolute h-[2.3%] w-[46%] bg-[#F53180] opacity-80 top-[33.5%] left-[72.4%] rounded-2xl" style="transform: rotate(89deg);"></div>';
+            output += '<div id="U"   class="placeholder col-12 absolute h-[2.3%] w-[48.3%] bg-[#F53180] opacity-80 top-[32.5%] left-[71.3%] rounded-2xl" style="transform: rotate(89deg);"></div>';
         } else {
             output += '<div id="U" class="road"></div>';
         }
@@ -863,6 +866,8 @@
             <div class="xs:hidden sm:hidden md:hidden lg:flex flex-col">
               <h1 class="text-white" style="font-size: 10px">AUTOMATION TECHNOLOGIES</h1>
               <h1 class="text-white" style="font-size: 10px">INFORMATION SYSTEM</h1>
+
+              
             </div>
           </div>
           <!-- LOGO SECTION END -->
@@ -871,7 +876,9 @@
               <div class="flex h-full justify-center items-center">
                 <img class="md:w-8 lg:w-10" src="images/navbar/location.png" alt="" />
               </div>
+              
               <div>
+                
                 <h1 class="text-xs text-white font-thin">LOCATION:</h1>
                 <h1 class="md:text-xs lg:text-sm text-white">
                   BULACAN STATE UNIVERSITY
@@ -937,6 +944,44 @@
           </div>
           <!-- TODO BIN STATUS END -->
 
+          
+          <!-- TODO MODAL BUTTON START -->
+            <a href="#"> 
+            <img data-toggle="modal" data-target="#exampleModal" class="w-[15%] absolute top-[87.5%] left-[39.5%] z-10 rounded-xl"
+                src="images/map/logsheet.png" alt="img_bin1" />
+            </a>
+
+          <!-- TODO MODAL BUTTON END -->
+
+          <!-- TODO  PIN START AND END-->
+          <!-- Alvarado Hall Start -->
+          <img class="w-[3%] absolute top-[22%] left-[21%] z-20" src="images/map/start.png"
+          alt="" />
+          <!-- Alvarado Hall End -->
+          <!-- Pimentel Start -->
+          <img class="w-[3%] absolute top-[53.8%] left-[22%] z-20" src="images/map/start.png"
+          alt="" />
+          <!-- Pimentel End -->
+          <!-- CHTM BLDG Start -->
+          <img class="w-[3%] absolute top-[8.5%] left-[49.5%] z-20" src="images/map/start.png"
+          alt="" />
+          <!-- CHTM BLDG End -->
+          <!-- Roxal Hall Start -->
+          <img class="w-[3%] absolute top-[61.5%] left-[48.5%] z-20" src="images/map/start.png"
+          alt="" />
+          <!-- Roxal Hall End -->
+          <!-- Natividad Hall Start -->
+          <img class="w-[3%] absolute top-[65.5%] left-[64%] z-20" src="images/map/start.png"
+          alt="" />
+          <!-- Natividad Hall End -->
+          <!-- Finish Start -->
+          <img class="w-[3%] absolute top-[-5%] left-[93.5%] z-20" src="images/map/end.png"
+          alt="" />
+          <!-- Finish End -->
+          <!-- TODO  PIN START AND END-->
+
+          
+
           <!-- TODO | MAP BIN START -->
           <div class="try" id="try">
             <!-- BIN 1 START -->
@@ -991,15 +1036,93 @@
           <div id="line-div">
             <div id="path_container" class="placeholder-glow"></div>
           </div>
-
           <!-- TODO LINE END -->
-
-
         </div>
 
         <!-- TODO MAP SECTION END -->
       </div>
-      <!-- TODO BODY CONTAINER START -->
+      <!-- TODO BODY CONTAINER END -->
+      <!-- TODO MODAL CONTENT START -->
+      <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-[#2D2B4D] border-2">
+          <h2 class="modal-title text-white text-2xl font-bold" id="exampleModalLabel">BIN LOG</h2>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body bg-[#1C1D2F] border-2">
+          <table class="table text-white text-center">
+            <thead>
+              <tr>
+                <th>Date & Time</th>
+                <th>Bin ID</th>
+                <th>Bin Location</th>
+                <th>Bin Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>16/04/23 - 4:00PM</td>
+                <td>1</td>
+                <td>Alvarado Hall</td>
+                <td>Half-Full</td>
+              </tr>
+              <tr>
+                <td>16/04/23 - 4:00PM</td>
+                <td>2</td>
+                <td>Pimentel Hall</td>
+                <td>Minimal</td>
+              </tr>
+              <tr>
+                <td>16/04/23 - 4:00PM</td>
+                <td>3</td>
+                <td>CHTM Bldg</td>
+                <td>Empty</td>
+              </tr>
+              <tr>
+                <td>16/04/23 - 4:00PM</td>
+                <td>4</td>
+                <td>Roxal Hall</td>
+                <td>Full</td>
+              </tr>
+              <tr>
+                <td>16/04/23 - 4:00PM</td>
+                <td>5</td>
+                <td>Natividad Hall</td>
+                <td>Error</td>
+              </tr>
+              
+              
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer bg-[#1C1D2F] border-2 flex justify-between">
+            <footer>
+                <nav class="flex justify-center ">
+                    <ul class="pagination">
+                      <li class="page-item">
+                        <a class="page-link bg-[#1C1D2F] text-white" href="#">1</a>
+                      </li>
+                      <li class="page-item active">
+                        <a class="page-link bg-[#1C1D2F] text-white" href="#">2</a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link bg-[#1C1D2F] text-white" href="#">3</a>
+                      </li>
+                    </ul>
+                  </nav>
+                  
+            </footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  <!-- TODO MODAL CONTENT END -->
     </div>
     <!-- TODO MAIN CONTAINER END -->
 </body>
