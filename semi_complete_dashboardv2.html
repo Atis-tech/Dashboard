@@ -363,7 +363,46 @@
                             if (!messageDatas[timeString]) {
                                 messageDatas[dateString] = [];
                             }
-                            messageDatas[dateString].push({Time : timeString, Bin : devIds, Value : binValue});
+
+                            //Values for Database
+                            var loc = '';
+                            var binId = 0;
+                            if(devIds=='bin-1'){
+                                loc = 'Alvarado Hall';
+                                binId=1;
+                            }
+                            else if(devIds=='bin-2'){
+                                loc = 'Pimentel Hall';
+                                binId=2;
+                            }
+                            else if(devIds=='bin-3'){
+                                loc = 'CHTM Building';
+                                binId=3;
+                            }
+                            else if(devIds=='bin-4'){
+                                loc = 'Roxas Hall';
+                                binId=4;
+                            }
+                            else if(devIds=='bin-5'){
+                                loc = 'Natividad Hall';
+                                binId=5;
+                            }
+
+                            //Values for Database
+                            var binVal = parseInt(binValue);
+                            var binStat = '';
+                            if (binVal >= 24 && binVal <= 47) {
+                                binStat = "HALF FULL";
+                            } else if (binVal >= 48 && binVal <= 67) {
+                                binStat = "MINIMAL";
+                            } else if (binVal<=68 && binVal>=70) {
+                                binStat = "EMPTY";
+                            } else if (binVal >= 2 && binVal <= 23) {
+                                binStat = "FULL";
+                            } else if (binVal <= 0 || binVal >=71) {
+                                binStat = "ERROR";
+                            }
+                            messageDatas[dateString].push({Time : timeString, Bin : binId, Status : binStat, Location: loc});
                             console.log(messageDatas);
                             console.log(binValue);
                             console.log(devIds);
@@ -410,24 +449,26 @@
             get(dateRef).then((snapshot) => {
                 if (snapshot.exists()) {
                 // Datekey already exists, update it
-                for (const {Time, Bin, Value} of dateObj) {
-                    const childRef = child(dateRef, `/${Time}`);
+                for (const {Time, Bin, Status, Location} of dateObj) {
+                    const childRef = child(dateRef, `${Time}`);
                     set(childRef, {
                     Bin: Bin,
-                    Status: Value
+                    Status: Status,
+                    Location: Location
                     }).then(() => {
-                    console.log(`Data saved for ${dateKey} /${Time}`);
+                    console.log(`Data saved for ${dateKey} ${Time}`);
                     }).catch((error) => {
-                    console.error(`Error saving data for ${dateKey} /${Time}: ${error}`);
+                    console.error(`Error saving data for ${dateKey} ${Time}: ${error}`);
                     });
                 }
                 } else {
                 // Datekey does not exist, create it
                 const newDateObj = {};
-                for (const {Time, Bin, Value} of dateObj) {
+                for (const {Time, Bin, Status, Location} of dateObj) {
                     newDateObj[Time] = {
                     Bin: Bin,
-                    Status: Value
+                    Status: Status,
+                    Location: Location
                     };
                 }
                 set(dateRef, newDateObj).then(() => {
@@ -456,8 +497,8 @@
                     const dateObj = data[dateKey];
                     for (const timeKey in dateObj) {
                         if (Object.hasOwnProperty.call(dateObj, timeKey)) {
-                            const {Bin, Status} = dateObj[timeKey];
-                            console.log(`Date: ${dateKey}, Time: ${timeKey}, Bin: ${Bin}, Status: ${Status}`);
+                            const {Bin, Status, Location} = dateObj[timeKey];
+                            console.log(`Date: ${dateKey}, Time: ${timeKey}, Bin: ${Bin}, Status: ${Status}, Location: ${Location}`);
                         }
                     }
                 }
