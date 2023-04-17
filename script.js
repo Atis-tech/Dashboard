@@ -221,7 +221,7 @@
         const devId4 = "bin-4";
         const devId5 = "bin-5";
         const apiKey = 'AEO5BYYNBDURPIYFECSVUJD45X3G2WWKJDZCDYY.27T7EP5MBZQVRRBXK5IL3RDRT3ZCHLMQOWPHFFYD2U7JOY4TQBIQ';
-        const apiUrl = 'https://au1.cloud.thethings.network/api/v3/events';
+        const apiUrl = 'https://au1.cloud.thethings.network/api/v3/events?filter=as.up.data.forward';
         const authToken = `Bearer NNSXS.${apiKey}`;
         const contentType = 'application/json';
         const userAgent = 'my-integration/my-integration-version';
@@ -293,11 +293,18 @@
                         for (const message of messages) {
                             const messageObject = JSON.parse(message); // Parse the message string into a JSON object
 
-                            if (messageObject.result.name === "as.up.data.forward") { // Filter for uplink messages
+                            if (messageObject.result.name == "as.up.data.forward" && !messageObject.result.name.includes("ns.down.transmission.fail")) { // Filter for uplink messages
                                 console.log(messageObject);
                                 const devIds = messageObject.result?.identifiers?.[0]?.device_ids?.device_id;
                                 const binValue = messageObject.result?.data?.uplink_message?.decoded_payload?.text;
                                 const binTime = messageObject.result?.data?.uplink_message?.received_at;
+                                var previousBinval = localStorage.getItem('PrevbinVal');
+
+                                if(binValue==null || isNaN(binValue) || binValue==undefined){
+                                    binValue = previousBinval;
+                                } else {
+                                    localStorage.setItem('PrevbinVal', binValue);
+                                }
 
                                 const timestamp = binTime;
                                 const date = new Date(timestamp);
