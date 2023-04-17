@@ -471,7 +471,11 @@
                 dataArray.sort((a, b) => {
                   const aDatetime = new Date(`${a.date} ${a.time}`);
                   const bDatetime = new Date(`${b.date} ${b.time}`);
-                  return bDatetime - aDatetime;
+                  if (b.date !== a.date) {
+                    return new Date(a.date) - new Date(b.date);
+                  } else {
+                    return aDatetime.getTime() - bDatetime.getTime();
+                  }
                 });
                 // Generate table rows from sorted dataArray
                 let logOutput = '';
