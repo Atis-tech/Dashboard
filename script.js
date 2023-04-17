@@ -37,7 +37,7 @@
             for_date();
             buttons();
             $('#exampleModal').on('shown.bs.modal', function() {
-                paginationData(5);
+                paginationData(10);
             });
         }
     });
@@ -390,102 +390,116 @@
     }
     
     function savetoDatabase(logData) {
-    const dbRef = ref(db, "Data/");
-    const dateObj = { [logData.Date]: [{ Time: logData.Time, Bin: logData.Bin, Status: logData.Status, Location: logData.Location }] };
-        for (const Date in dateObj) {
-            if (Object.hasOwnProperty.call(dateObj, Date)) {
-                const dataArr = dateObj[Date];
-                const dateRef = child(dbRef, Date);
-                get(dateRef).then((snapshot) => {
-                    if (snapshot.exists()) {
-                        // Datekey already exists, update it
-                        for (const { Time, Bin, Status, Location } of dataArr) {
-                            const childRef = child(dateRef, `${Time}`);
-                            set(childRef, {
-                                Bin: Bin,
-                                Status: Status,
-                                Location: Location
-                            }).then(() => {
-                                console.log(`Data saved for ${Date} ${Time}`);
+        return new Promise((resolve, reject) => {
+            const dbRef = ref(db, "Data/");
+            const dateObj = { [logData.Date]: [{ Time: logData.Time, Bin: logData.Bin, Status: logData.Status, Location: logData.Location }] };
+            for (const Date in dateObj) {
+                if (Object.hasOwnProperty.call(dateObj, Date)) {
+                    const dataArr = dateObj[Date];
+                    const dateRef = child(dbRef, Date);
+                    get(dateRef).then((snapshot) => {
+                        if (snapshot.exists()) {
+                            // Datekey already exists, update it
+                            for (const { Time, Bin, Status, Location } of dataArr) {
+                                const childRef = child(dateRef, `${Time}`);
+                                set(childRef, {
+                                    Bin: Bin,
+                                    Status: Status,
+                                    Location: Location
+                                }).then(() => {
+                                    console.log(`Data saved for ${Date} ${Time}`);
+                                    resolve(`Data saved for ${Date} ${Time}`);
+                                }).catch((error) => {
+                                    console.error(`Error saving data for ${Date} ${Time}: ${error}`);
+                                    reject(`Error saving data for ${Date} ${Time}: ${error}`);
+                                });
+                            }
+                        } else {
+                            // Datekey does not exist, create it
+                            const newDateObj = {};
+                            for (const { Time, Bin, Status, Location } of dataArr) {
+                                newDateObj[Time] = {
+                                    Bin: Bin,
+                                    Status: Status,
+                                    Location: Location
+                                };
+                            }
+                            set(dateRef, newDateObj).then(() => {
+                                console.log(`Data saved for ${Date}`);
+                                resolve(`Data saved for ${Date}`);
                             }).catch((error) => {
-                                console.error(`Error saving data for ${Date} ${Time}: ${error}`);
+                                console.error(`Error saving data for ${Date}: ${error}`);
+                                reject(`Error saving data for ${Date}: ${error}`);
                             });
                         }
-                    } else {
-                        // Datekey does not exist, create it
-                        const newDateObj = {};
-                        for (const { Time, Bin, Status, Location } of dataArr) {
-                            newDateObj[Time] = {
-                                Bin: Bin,
-                                Status: Status,
-                                Location: Location
-                            };
-                        }
-                        set(dateRef, newDateObj).then(() => {
-                            console.log(`Data saved for ${Date}`);
-                        }).catch((error) => {
-                            console.error(`Error saving data for ${Date}: ${error}`);
-                        });
-                    }
-                }).catch((error) => {
-                    console.error(`Error checking if ${Date} exists: ${error}`);
-                });
-            }
-        }
-    }
-
-    function loadDatabase(){
-    const dbRef = ref(db, 'Data');
-    get(dbRef).then((snapshot) => {
-        if (snapshot.exists()) {
-        const data = snapshot.val();
-        // Convert data to an array of objects with date and time keys
-        const dataArray = [];
-        for (const dateKey in data) {
-            if (Object.hasOwnProperty.call(data, dateKey)) {
-            const dateObj = data[dateKey];
-            for (const timeKey in dateObj) {
-                if (Object.hasOwnProperty.call(dateObj, timeKey)) {
-                const {Bin, Status, Location} = dateObj[timeKey];
-                dataArray.push({
-                    date: dateKey,
-                    time: timeKey,
-                    bin: Bin,
-                    status: Status,
-                    location: Location
-                });
+                    }).catch((error) => {
+                        console.error(`Error checking if ${Date} exists: ${error}`);
+                        reject(`Error checking if ${Date} exists: ${error}`);
+                    });
                 }
             }
-            }
-        }
-        // Sort dataArray by date and time
-        dataArray.sort((a, b) => {
-            const aDatetime = new Date(`${a.date} ${a.time}`);
-            const bDatetime = new Date(`${b.date} ${b.time}`);
-            return bDatetime - aDatetime;
         });
-        // Generate table rows from sorted dataArray
-        let logOutput = '';
-        dataArray.forEach(({date, time, bin, status, location}) => {
-            logOutput += `
-            <tr>
-                <td>${date} - ${time}</td>
-                <td>${bin}</td>
-                <td>${location}</td>
-                <td>${status}</td>
-            </tr>
-            `;
-            console.log(`Date: ${date}, Time: ${time}, Bin: ${bin}, Status: ${status}, Location: ${location}`);
-        });
-        document.getElementById('log_table_body').innerHTML = logOutput;
-        } else {
-        console.log('No data available');
-        }
-    }).catch((error) => {
-        console.error(error);
-    });
     }
-
+    
+    function loadDatabase() {
+        return new Promise((resolve, reject) => {
+          const dbRef = ref(db, 'Data');
+          get(dbRef)
+            .then((snapshot) => {
+              if (snapshot.exists()) {
+                const data = snapshot.val();
+                // Convert data to an array of objects with date and time keys
+                const dataArray = [];
+                for (const dateKey in data) {
+                  if (Object.hasOwnProperty.call(data, dateKey)) {
+                    const dateObj = data[dateKey];
+                    for (const timeKey in dateObj) {
+                      if (Object.hasOwnProperty.call(dateObj, timeKey)) {
+                        const { Bin, Status, Location } = dateObj[timeKey];
+                        dataArray.push({
+                          date: dateKey,
+                          time: timeKey,
+                          bin: Bin,
+                          status: Status,
+                          location: Location
+                        });
+                      }
+                    }
+                  }
+                }
+                // Sort dataArray by date and time
+                dataArray.sort((a, b) => {
+                  const aDatetime = new Date(`${a.date} ${a.time}`);
+                  const bDatetime = new Date(`${b.date} ${b.time}`);
+                  return bDatetime - aDatetime;
+                });
+                // Generate table rows from sorted dataArray
+                let logOutput = '';
+                dataArray.forEach(({ date, time, bin, status, location }) => {
+                  logOutput += `
+                    <tr>
+                      <td>${date} - ${time}</td>
+                      <td>${bin}</td>
+                      <td>${location}</td>
+                      <td>${status}</td>
+                    </tr>
+                  `;
+                  console.log(`Date: ${date}, Time: ${time}, Bin: ${bin}, Status: ${status}, Location: ${location}`);
+                });
+                document.getElementById('log_table_body').innerHTML = logOutput;
+                resolve('Load database completed.');
+              } else {
+                console.log('No data available');
+                reject('No data available');
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+              reject(error);
+            });
+        });
+    }
+      
     function antColonyDijkstra(bsu, startCoord, endCoord, numAnts, iterations) {
         const distances = [];
         const visited = [];
