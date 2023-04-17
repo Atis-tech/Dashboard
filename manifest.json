@@ -1,7 +1,7 @@
 {
     "name": "ATIS - Dashboard",
     "short_name": "ATIS - Dashboard",
-    "start_url": "/",
+    "start_url": ".",
     "icons": [
       {
         "src": "images/favicons/Website Logo .png",
