@@ -111,7 +111,7 @@
             } else if (value >= 48 && value <= 67) {
                 $(bin.btn).attr('data-stat', statb);
                 $(bin.img).attr('src', min_img);
-            } else if (value>=68 && value<=70) {
+            } else if (value >= 68 && value <= 70) {
                 $(bin.btn).attr('data-stat', statc);
                 $(bin.img).attr('src', emp_img);
             } else if (value >= 2 && value <= 23) {
@@ -342,11 +342,11 @@
                                     binStat = "HALF FULL";
                                 } else if (binVal >= 48 && binVal <= 67) {
                                     binStat = "MINIMAL";
-                                } else if (binVal<=68 && binVal>=70) {
+                                } else if (binVal>=68 && binVal<=70) {
                                     binStat = "EMPTY";
                                 } else if (binVal >= 2 && binVal <= 23) {
                                     binStat = "FULL";
-                                } else if (binVal <= 0 || binVal >=71) {
+                                } else {
                                     binStat = "ERROR";
                                 }
                                 messageDatas = {Date: dateString, Time : timeString, Bin : binId, Status : binStat, Location: loc};
@@ -934,4 +934,3 @@
     // Show first page by default
     paginationList.find("li:first-child").trigger("click");
     }
-    
