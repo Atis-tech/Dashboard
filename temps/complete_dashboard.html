@@ -54,9 +54,8 @@
   </style>
 
   <!--MAIN SCRIPT-->
-  <script type="module">
-
-    //FIREBASE FOR DATABASE
+  <script type="module" src="app.js">
+        //FIREBASE FOR DATABASE
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.19.1/firebase-analytics.js";
@@ -169,13 +168,13 @@
             } else if (value >= 48 && value <= 67) {
                 $(bin.btn).attr('data-stat', statb);
                 $(bin.img).attr('src', min_img);
-            } else if (value<=68 && value>=70) {
+            } else if (value>=68 && value<=70) {
                 $(bin.btn).attr('data-stat', statc);
                 $(bin.img).attr('src', emp_img);
             } else if (value >= 2 && value <= 23) {
                 $(bin.btn).attr('data-stat', statd);
                 $(bin.img).attr('src', full_img);
-            } else if (value <= 0 || value >=71) {
+            } else {
                 $(bin.btn).attr('data-stat', state);
                 $(bin.img).attr('src', err_img);
             }
@@ -270,6 +269,7 @@
         ];
         return bsu;
     }
+    
     function get_API_data() {
         const appId = "bulsu-lora-bin";
         const devId1 = "bin-1";
@@ -488,9 +488,6 @@
         }
     }
 
-
-
-
     function loadDatabase(){
     const dbRef = ref(db, 'Data');
     get(dbRef).then((snapshot) => {
@@ -542,7 +539,6 @@
         console.error(error);
     });
     }
-
 
     function antColonyDijkstra(bsu, startCoord, endCoord, numAnts, iterations) {
         const distances = [];
@@ -756,13 +752,9 @@
             );
             output_path(shortestPathModify);
             console.log(shortestPathModify);
-            console.log('Possible Path: '+pathValue);
-            console.log('Shortest Path: '+value);
         } else if (pathValue == value) {
             output_path(shortestPath);
             console.log(shortestPath);
-            console.log('Possible Path: '+pathValue);
-            console.log('Shortest Path: '+value);
         }
     }
 
@@ -915,9 +907,10 @@
         output += '\n</div>'
         document.getElementById('line-div').innerHTML = output;
     }
+    
     function for_pinpoint(){
         var prevpin;
-        $('#try a,img').click(function(){
+        $('#try > *').click(function(){
            var pinNum = $(this).attr('data-pin');
             if (prevpin === pinNum) {
                 return;
@@ -925,9 +918,12 @@
 
             if (prevpin) {
                 $(`#pinpoint${prevpin}`).attr('hidden',true);
+                $(`img`).removeClass('ring-2');
+
             }
 
             $(`#pinpoint${pinNum}`).removeAttr('hidden');
+            $(`#bin_img${pinNum}`).addClass('ring-2');
             prevpin = pinNum;
 
         })
@@ -978,10 +974,6 @@
     // Show first page by default
     paginationList.find("li:first-child").trigger("click");
     }
-
-
-
-
     
   </script>
 </head>
