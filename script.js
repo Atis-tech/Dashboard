@@ -273,117 +273,120 @@
             headers: requestHeaders,
             body: JSON.stringify(requestData)
         };
-
-        fetch(apiUrl, requestOptions)
-            .then(response => {
-                const reader = response.body.getReader();
-                let buffer = '';
-                let deviceData = {};
-                let messageDatas = {};
-                return reader.read().then(function processText({ done, value }) {
-                    if (done) {
-                        return;
-                    }
-
-                    buffer += new TextDecoder().decode(value);
-                    const messages = buffer.split('\n\n');
-                    buffer = messages.pop();
-
-                    for (const message of messages) {
-                        const messageObject = JSON.parse(message); // Parse the message string into a JSON object
-
-                        if (messageObject.result.name === "as.up.data.forward") { // Filter for uplink messages
-                            console.log(messageObject);
-                            const devIds = messageObject.result?.identifiers?.[0]?.device_ids?.device_id;
-                            const binValue = messageObject.result?.data?.uplink_message?.decoded_payload?.text;
-                            const binTime = messageObject.result?.data?.uplink_message?.received_at;
-
-                            const timestamp = binTime;
-                            const date = new Date(timestamp);
-
-                            // Convert to Philippine time
-                            const localTime = date.toLocaleString('en-PH', { timeZone: 'Asia/Manila' });
-
-                            // Get the date component in YYYY-MM-DD format
-                            const dateString = localTime.split(',')[0].replace(/\//g, '-');
-
-                            // Get the time component in HH:MM:SS format
-                            const timeString = localTime.split(',')[1].trim();
-
-                            //Values for Database
-                            var loc = '';
-                            var binId = 0;
-                            if(devIds=='bin-1'){
-                                loc = 'Alvarado Hall';
-                                binId=1;
-                            }
-                            else if(devIds=='bin-2'){
-                                loc = 'Pimentel Hall';
-                                binId=2;
-                            }
-                            else if(devIds=='bin-3'){
-                                loc = 'CHTM Building';
-                                binId=3;
-                            }
-                            else if(devIds=='bin-4'){
-                                loc = 'Roxas Hall';
-                                binId=4;
-                            }
-                            else if(devIds=='bin-5'){
-                                loc = 'Natividad Hall';
-                                binId=5;
-                            }
-
-                            //Values for Database
-                            var binVal = parseInt(binValue);
-                            var binStat = '';
-                            if (binVal >= 24 && binVal <= 47) {
-                                binStat = "HALF FULL";
-                            } else if (binVal >= 48 && binVal <= 67) {
-                                binStat = "MINIMAL";
-                            } else if (binVal<=68 && binVal>=70) {
-                                binStat = "EMPTY";
-                            } else if (binVal >= 2 && binVal <= 23) {
-                                binStat = "FULL";
-                            } else if (binVal <= 0 || binVal >=71) {
-                                binStat = "ERROR";
-                            }
-                            messageDatas = {Date: dateString, Time : timeString, Bin : binId, Status : binStat, Location: loc};
-                            console.log(messageDatas);
-                            console.log(binValue);
-                            console.log(devIds);
-                            switch (devIds) {
-                                case devId1:
-                                    deviceData[devId1] = parseInt(binValue);
-                                    break;
-                                case devId2:
-                                    deviceData[devId2] = parseInt(binValue);
-                                    break;
-                                case devId3:
-                                    deviceData[devId3] = parseInt(binValue);
-                                    break;
-                                case devId4:
-                                    deviceData[devId4] = parseInt(binValue);
-                                    break;
-                                case devId5:
-                                    deviceData[devId5] = parseInt(binValue);
-                                    break;
-                                default:
-                                    break;
-                            }
-                            console.log(deviceData);
-                            localStorage.setItem('BinStatus', JSON.stringify(deviceData));
-                            savetoDatabase(messageDatas);
+        return new Promise((resolve, reject) => {
+            fetch(apiUrl, requestOptions)
+                .then(response => {
+                    const reader = response.body.getReader();
+                    let buffer = '';
+                    let deviceData = {};
+                    let messageDatas = {};
+                    return reader.read().then(function processText({ done, value }) {
+                        if (done) {
+                            resolve('Process completed.');
+                            return;
                         }
-                    }
 
-                    return reader.read().then(processText);
-                });
-            })
-            .catch(error => {
-                console.error(error);
-                console.log(error.message);
-            });
+                        buffer += new TextDecoder().decode(value);
+                        const messages = buffer.split('\n\n');
+                        buffer = messages.pop();
+
+                        for (const message of messages) {
+                            const messageObject = JSON.parse(message); // Parse the message string into a JSON object
+
+                            if (messageObject.result.name === "as.up.data.forward") { // Filter for uplink messages
+                                console.log(messageObject);
+                                const devIds = messageObject.result?.identifiers?.[0]?.device_ids?.device_id;
+                                const binValue = messageObject.result?.data?.uplink_message?.decoded_payload?.text;
+                                const binTime = messageObject.result?.data?.uplink_message?.received_at;
+
+                                const timestamp = binTime;
+                                const date = new Date(timestamp);
+
+                                // Convert to Philippine time
+                                const localTime = date.toLocaleString('en-PH', { timeZone: 'Asia/Manila' });
+
+                                // Get the date component in YYYY-MM-DD format
+                                const dateString = localTime.split(',')[0].replace(/\//g, '-');
+
+                                // Get the time component in HH:MM:SS format
+                                const timeString = localTime.split(',')[1].trim();
+
+                                //Values for Database
+                                var loc = '';
+                                var binId = 0;
+                                if(devIds=='bin-1'){
+                                    loc = 'Alvarado Hall';
+                                    binId=1;
+                                }
+                                else if(devIds=='bin-2'){
+                                    loc = 'Pimentel Hall';
+                                    binId=2;
+                                }
+                                else if(devIds=='bin-3'){
+                                    loc = 'CHTM Building';
+                                    binId=3;
+                                }
+                                else if(devIds=='bin-4'){
+                                    loc = 'Roxas Hall';
+                                    binId=4;
+                                }
+                                else if(devIds=='bin-5'){
+                                    loc = 'Natividad Hall';
+                                    binId=5;
+                                }
+
+                                //Values for Database
+                                var binVal = parseInt(binValue);
+                                var binStat = '';
+                                if (binVal >= 24 && binVal <= 47) {
+                                    binStat = "HALF FULL";
+                                } else if (binVal >= 48 && binVal <= 67) {
+                                    binStat = "MINIMAL";
+                                } else if (binVal<=68 && binVal>=70) {
+                                    binStat = "EMPTY";
+                                } else if (binVal >= 2 && binVal <= 23) {
+                                    binStat = "FULL";
+                                } else if (binVal <= 0 || binVal >=71) {
+                                    binStat = "ERROR";
+                                }
+                                messageDatas = {Date: dateString, Time : timeString, Bin : binId, Status : binStat, Location: loc};
+                                console.log(messageDatas);
+                                console.log(binValue);
+                                console.log(devIds);
+                                switch (devIds) {
+                                    case devId1:
+                                        deviceData[devId1] = parseInt(binValue);
+                                        break;
+                                    case devId2:
+                                        deviceData[devId2] = parseInt(binValue);
+                                        break;
+                                    case devId3:
+                                        deviceData[devId3] = parseInt(binValue);
+                                        break;
+                                    case devId4:
+                                        deviceData[devId4] = parseInt(binValue);
+                                        break;
+                                    case devId5:
+                                        deviceData[devId5] = parseInt(binValue);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                console.log(deviceData);
+                                localStorage.setItem('BinStatus', JSON.stringify(deviceData));
+                                savetoDatabase(messageDatas);
+                            }
+                        }
+
+                        return reader.read().then(processText);
+                    });
+                })
+                .catch(error => {
+                    reject(`Error: ${error}`)
+                    console.log(error.message);
+                }
+            );
+        });
     }
     
     function savetoDatabase(logData) {
