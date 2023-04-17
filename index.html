@@ -913,7 +913,7 @@
     }
     function for_pinpoint(){
         var prevpin;
-        $('#try a,img').click(function(){
+        $('#try > *').click(function(){
            var pinNum = $(this).attr('data-pin');
             if (prevpin === pinNum) {
                 return;
@@ -921,9 +921,12 @@
 
             if (prevpin) {
                 $(`#pinpoint${prevpin}`).attr('hidden',true);
+                $(`img`).removeClass('ring-2');
+
             }
 
             $(`#pinpoint${pinNum}`).removeAttr('hidden');
+            $(`#bin_img${pinNum}`).addClass('ring-2');
             prevpin = pinNum;
 
         })
@@ -1126,7 +1129,7 @@
             <!-- BIN 1 START -->
             <a href="#b1" id="bin_btn1" data-value="1" data-loc="ALVARADO HALL" data-id="BIN 1" data-stat="3" data-pin="1">
               <img id="bin_img1" data-stat="3" data-pin="1"
-                class="w-[5%] absolute top-[14.5%] left-[17%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl ring-2 ring-cyan-400"
+                class="w-[5%] absolute top-[14.5%] left-[17%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl ring-cyan-400"
                 src="images/sidebar/yellowbin.png" alt="img_bin1" />
 
             </a>
@@ -1135,7 +1138,7 @@
             <!-- BIN 2 START -->
             <a href="#b2" id="bin_btn2" data-value="2" data-loc="PIMENTEL HALL" data-id="BIN 2" data-stat="3" data-pin="2"> 
               <img id="bin_img2" data-stat="3" data-pin="2"
-                class="w-[5%] absolute top-[57%] left-[19%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl ring-2 ring-cyan-400"
+                class="w-[5%] absolute top-[57%] left-[19%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl ring-cyan-400"
                 src="images/sidebar/bluebin.png" alt="img_bin2" />
 
             </a>
@@ -1144,7 +1147,7 @@
             <!-- BIN 3 START -->
             <a href="#b3" id="bin_btn3" data-value="3" data-loc="CHTM BUILDING" data-id="BIN 3" data-stat="3" data-pin="3">
               <img id="bin_img3" data-stat="3" data-pin="3"
-                class="w-[5%] absolute top-[8%] left-[45%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl ring-2 ring-cyan-400"
+                class="w-[5%] absolute top-[8%] left-[45%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl ring-cyan-400"
                 src="images/sidebar/emptybin.png" alt="img_bin3" />
 
             </a>
@@ -1153,7 +1156,7 @@
             <!-- BIN 4 START -->
             <a href="#b4" id="bin_btn4" data-value="4" data-loc="ROXAS HALL" data-id="BIN 4" data-stat="3" data-pin="4">
               <img id="bin_img4" data-stat="3" data-pin="4"
-                class="w-[5%] absolute top-[55%] left-[44%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl ring-2 ring-cyan-400"
+                class="w-[5%] absolute top-[55%] left-[44%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl ring-cyan-400"
                 src="images/sidebar/fullbin.png" alt="img_bin4" />
 
             </a>
@@ -1162,7 +1165,7 @@
             <!-- BIN 5 START -->
             <a href="#b5" id="bin_btn5" data-value="5" data-loc="NATIVIDAD HALL" data-id="BIN 5" data-stat="3" data-pin="5">
               <img id="bin_img5" data-stat="3" data-pin="5"
-                class="w-[5%] absolute bottom-[25%] left-[59%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl ring-2 ring-cyan-400"
+                class="w-[5%] absolute bottom-[25%] left-[59%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl ring-cyan-400"
                 src="images/sidebar/errorbin.png" alt="img_bin5" />
 
             </a>
