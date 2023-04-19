@@ -298,12 +298,12 @@
                                 const devIds = messageObject.result?.identifiers?.[0]?.device_ids?.device_id;
                                 const binValue = messageObject.result?.data?.uplink_message?.decoded_payload?.text;
                                 const binTime = messageObject.result?.data?.uplink_message?.received_at;
-                                var previousBinval = localStorage.getItem('PrevbinVal');
+                                var previousBinval = 0;
 
                                 if(binValue==null || isNaN(binValue) || binValue==undefined){
                                     binValue = previousBinval;
                                 } else {
-                                    localStorage.setItem('PrevbinVal', binValue);
+                                    previousBinval = binValue;
                                 }
 
                                 const timestamp = binTime;
