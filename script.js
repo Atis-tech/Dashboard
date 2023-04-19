@@ -889,7 +889,6 @@
             if (prevpin) {
                 $(`#pinpoint${prevpin}`).attr('hidden',true);
                 $(`img`).removeClass('ring-2');
-
             }
 
             $(`#pinpoint${pinNum}`).removeAttr('hidden');
