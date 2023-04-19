@@ -57,7 +57,7 @@
 
         //Changing depending to API
         var storedObject = localStorage.getItem('BinStatus');
-        console.log(storedObject);
+        console.log(`Previous Bin Status: ${storedObject}`);
         if (storedObject !== null) {
             var parsedObject = JSON.parse(storedObject);
             bin1 = parsedObject['bin-1'];
@@ -294,7 +294,7 @@
                             const messageObject = JSON.parse(message); // Parse the message string into a JSON object
 
                             if (messageObject.result.name == "as.up.data.forward" && !messageObject.result.name.includes("ns.down.transmission.fail")) { // Filter for uplink messages
-                                console.log(messageObject);
+                                console.log(`API Data: ${messageObject}`);
                                 const devIds = messageObject.result?.identifiers?.[0]?.device_ids?.device_id;
                                 const binValue = messageObject.result?.data?.uplink_message?.decoded_payload?.text;
                                 const binTime = messageObject.result?.data?.uplink_message?.received_at;
@@ -357,9 +357,8 @@
                                     binStat = "ERROR";
                                 }
                                 messageDatas = {Date: dateString, Time : timeString, Bin : binId, Status : binStat, Location: loc};
-                                console.log(messageDatas);
-                                console.log(binValue);
-                                console.log(devIds);
+                                console.log(`Process Message Data: ${messageDatas}`);
+                                console.log(`Current Bin: ${devIds}, Current Value: ${binValue}`);
                                 switch (devIds) {
                                     case devId1:
                                         deviceData[devId1] = parseInt(binValue);
@@ -379,7 +378,7 @@
                                     default:
                                         break;
                                 }
-                                console.log(deviceData);
+                                console.log(`Final Bin Values: ${deviceData}`);
                                 localStorage.setItem('BinStatus', JSON.stringify(deviceData));
                                 savetoDatabase(messageDatas);
                             }
@@ -390,7 +389,7 @@
                 })
                 .catch(error => {
                     reject(`Error: ${error}`)
-                    console.log(error.message);
+                    console.log(`Error Message ${error.message}`);
                 }
             );
         });
@@ -722,10 +721,10 @@
                 iterations
             );
             output_path(shortestPathModify);
-            console.log(shortestPathModify);
+            console.log(`Shortest Path Value: ${shortestPathModify}`);
         } else if (pathValue == value) {
             output_path(shortestPath);
-            console.log(shortestPath);
+            console.log(`Shortest Path Value: ${shortestPath}`);
         }
     }
 
