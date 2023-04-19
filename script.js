@@ -721,10 +721,10 @@
                 iterations
             );
             output_path(shortestPathModify);
-            console.log(`Shortest Path Value: ${shortestPathModify}`);
+            console.log(shortestPathModify);
         } else if (pathValue == value) {
             output_path(shortestPath);
-            console.log(`Shortest Path Value: ${shortestPath}`);
+            console.log(shortestPath);
         }
     }
 
