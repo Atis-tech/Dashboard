@@ -357,7 +357,7 @@
                                     binStat = "ERROR";
                                 }
                                 messageDatas = {Date: dateString, Time : timeString, Bin : binId, Status : binStat, Location: loc};
-                                console.log(`Process Message Data: ${messageDatas}`);
+                                console.log(messageDatas);
                                 console.log(`Current Bin: ${devIds}, Current Value: ${binValue}`);
                                 switch (devIds) {
                                     case devId1:
@@ -378,7 +378,7 @@
                                     default:
                                         break;
                                 }
-                                console.log(`Final Bin Values: ${deviceData}`);
+                                console.log(deviceData);
                                 localStorage.setItem('BinStatus', JSON.stringify(deviceData));
                                 savetoDatabase(messageDatas);
                             }
@@ -388,8 +388,8 @@
                     });
                 })
                 .catch(error => {
-                    reject(`Error: ${error}`)
-                    console.log(`Error Message ${error.message}`);
+                    reject(error)
+                    console.log(error.message);
                 }
             );
         });
