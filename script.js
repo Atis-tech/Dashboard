@@ -471,18 +471,20 @@
                   } else {
                     return aDatetime.getTime() - bDatetime.getTime();
                   }
-                });
+                }).reverse();
                 // Generate table rows from sorted dataArray
                 let logOutput = '';
                 dataArray.forEach(({ date, time, bin, status, location }) => {
-                  logOutput += `
-                    <tr>
-                      <td>${date} - ${time}</td>
-                      <td>${bin}</td>
-                      <td>${location}</td>
-                      <td>${status}</td>
-                    </tr>
-                  `;
+                    const datetime = new Date(`${date} ${time}`);
+                    const formattedDatetime = `${datetime.toLocaleDateString()} - ${datetime.toLocaleTimeString()}`;
+                    logOutput += `
+                        <tr>
+                        <td>${formattedDatetime}</td>
+                        <td>${bin}</td>
+                        <td>${location}</td>
+                        <td>${status}</td>
+                        </tr>
+                    `;
                   console.log(`Date: ${date}, Time: ${time}, Bin: ${bin}, Status: ${status}, Location: ${location}`);
                 });
                 document.getElementById('log_table_body').innerHTML = logOutput;
