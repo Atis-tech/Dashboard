@@ -60,11 +60,11 @@
         console.log(`Previous Bin Status: ${storedObject}`);
         if (storedObject !== null) {
             var parsedObject = JSON.parse(storedObject);
-            bin1 = parsedObject['bin-1'];
-            bin2 = parsedObject['bin-2'];
-            bin3 = parsedObject['bin-3'];
-            bin4 = parsedObject['bin-4'];
-            bin5 = parsedObject['bin-5'];
+            bin1 = (!parsedObject['bin-1']) ? parsedObject['bin-1'] : 70;
+            bin2 = (!parsedObject['bin-2']) ? parsedObject['bin-2'] : 70;
+            bin3 = (!parsedObject['bin-3']) ? parsedObject['bin-3'] : 70;
+            bin4 = (!parsedObject['bin-4']) ? parsedObject['bin-4'] : 70;
+            bin5 = (!parsedObject['bin-5']) ? parsedObject['bin-5'] : 70;
         } else {
             bin1 = 70;
             bin2 = 70;
