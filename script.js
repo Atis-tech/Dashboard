@@ -73,17 +73,11 @@
             bin5 = 70;
         }
         //types of bin status
-        var stat1 = 1; //half full
-        var stat2 = 2; //minimal
-        var stat3 = 3; //empty
-        var stat4 = 4; //full
-        var stat5 = 5; //error
-
-        var stata = "HALF-FULL";
-        var statb = "MINIMAL";
-        var statc = "EMPTY";
-        var statd = "FULL";
-        var state = "ERROR";
+        var stat_hf = "HALF-FULL";
+        var stat_min = "MINIMAL";
+        var stat_emp = "EMPTY";
+        var stat_full = "FULL";
+        var stat_err = "ERROR";
 
         //bin image images
         var hf_img = "images/sidebar/yellowbin.png";
@@ -106,19 +100,19 @@
             const value = bin.value;
 
             if (value >= 24 && value <= 47) {
-                $(bin.btn).attr('data-stat', stata);
+                $(bin.btn).attr('data-stat', stat_hf);
                 $(bin.img).attr('src', hf_img);
             } else if (value >= 48 && value <= 67) {
-                $(bin.btn).attr('data-stat', statb);
+                $(bin.btn).attr('data-stat', stat_min);
                 $(bin.img).attr('src', min_img);
             } else if (value >= 68 && value <= 70) {
-                $(bin.btn).attr('data-stat', statc);
+                $(bin.btn).attr('data-stat', stat_emp);
                 $(bin.img).attr('src', emp_img);
             } else if (value >= 2 && value <= 23) {
-                $(bin.btn).attr('data-stat', statd);
+                $(bin.btn).attr('data-stat', stat_full);
                 $(bin.img).attr('src', full_img);
             } else {
-                $(bin.btn).attr('data-stat', state);
+                $(bin.btn).attr('data-stat', stat_err);
                 $(bin.img).attr('src', err_img);
             }
         }
@@ -128,7 +122,6 @@
         $('#bin_btn1').click(function () {
             var loc1 = $(this).attr('data-loc');
             var id1 = $(this).attr('data-id');
-            var val1 = $(this).attr('data-value');
             var img1 = $('#bin_img1').attr('src');
             var stat1 = $(this).attr('data-stat');
             $('#bin_loc').html(loc1);
@@ -141,7 +134,6 @@
         $('#bin_btn2').click(function () {
             var loc2 = $(this).attr('data-loc');
             var id2 = $(this).attr('data-id');
-            var val2 = $(this).attr('data-value');
             var img2 = $('#bin_img2').attr('src');
             var stat2 = $(this).attr('data-stat');
             $('#bin_loc').html(loc2);
@@ -154,7 +146,6 @@
         $('#bin_btn3').click(function () {
             var loc3 = $(this).attr('data-loc');
             var id3 = $(this).attr('data-id');
-            var val3 = $(this).attr('data-value');
             var img3 = $('#bin_img3').attr('src');
             var stat3 = $(this).attr('data-stat');
             $('#bin_loc').html(loc3);
@@ -167,7 +158,6 @@
         $('#bin_btn4').click(function () {
             var loc4 = $(this).attr('data-loc');
             var id4 = $(this).attr('data-id');
-            var val4 = $(this).attr('data-value');
             var img4 = $('#bin_img4').attr('src');
             var stat4 = $(this).attr('data-stat');
             $('#bin_loc').html(loc4);
@@ -180,7 +170,6 @@
         $('#bin_btn5').click(function () {
             var loc5 = $(this).attr('data-loc');
             var id5 = $(this).attr('data-id');
-            var val5 = $(this).attr('data-value');
             var img5 = $('#bin_img5').attr('src');
             var stat5 = $(this).attr('data-stat');
             $('#bin_loc').html(loc5);
