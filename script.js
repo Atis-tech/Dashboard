@@ -287,12 +287,12 @@
                                 const devIds = messageObject.result?.identifiers?.[0]?.device_ids?.device_id;
                                 var binValue = messageObject.result?.data?.uplink_message?.decoded_payload?.text;
                                 const binTime = messageObject.result?.data?.uplink_message?.received_at;
-                                var previousBinval = 0;
+                                var previousBinval = localStorage.getItem('prevBin');
 
                                 if(binValue==null || isNaN(binValue) || binValue==undefined){
                                     binValue = previousBinval;
                                 } else {
-                                    previousBinval = binValue;
+                                    previousBinval = localStorage.setItem('prevBin', binValue);
                                 }
 
                                 const timestamp = binTime;
