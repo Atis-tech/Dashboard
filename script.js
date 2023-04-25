@@ -269,6 +269,7 @@
                     let buffer = '';
                     let deviceData = {};
                     let messageDatas = {};
+                    let saveBins = {};
                     return reader.read().then(function processText({ done, value }) {
                         if (done) {
                             resolve('Process completed.');
@@ -287,12 +288,33 @@
                                 var binValue = messageObject.result?.data?.uplink_message?.decoded_payload?.text;
                                 const binTime = messageObject.result?.data?.uplink_message?.received_at;
                                 var previousBinval = localStorage.getItem('prevBin');
-                                console.log(`Bin saved value: ${previousBinval}`);
+                                console.log(previousBinval);
 
+                                //Exception when uncaught Error in API
                                 if(binValue==null || isNaN(binValue) || binValue==undefined){
-                                    binValue = previousBinval;
+                                    var parsedBin = JSON.parse(previousBinval);
+                                    binValue = parsedBin[devIds];
                                 } else {
-                                    previousBinval = localStorage.setItem('prevBin', binValue);
+                                    switch (devIds) {
+                                        case devId1:
+                                            saveBins[devId1] = parseInt(binValue);
+                                            break;
+                                        case devId2:
+                                            saveBins[devId2] = parseInt(binValue);
+                                            break;
+                                        case devId3:
+                                            saveBins[devId3] = parseInt(binValue);
+                                            break;
+                                        case devId4:
+                                            saveBins[devId4] = parseInt(binValue);
+                                            break;
+                                        case devId5:
+                                            saveBins[devId5] = parseInt(binValue);
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    previousBinval = localStorage.setItem('prevBin', JSON.stringify(saveBins));
                                 }
 
                                 const timestamp = binTime;
@@ -348,6 +370,8 @@
                                 messageDatas = {Date: dateString, Time : timeString, Bin : binId, Status : binStat, Location: loc};
                                 console.log(messageDatas);
                                 console.log(`Current Bin: ${devIds}, Current Value: ${binValue}`);
+                                
+                                //Pass processed data to Database
                                 switch (devIds) {
                                     case devId1:
                                         deviceData[devId1] = parseInt(binValue);
