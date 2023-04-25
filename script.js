@@ -285,7 +285,7 @@
                             if (messageObject.result.name == "as.up.data.forward" && !messageObject.result.name.includes("ns.down.transmission.fail")) { // Filter for uplink messages
                                 console.log(`API Data: ${messageObject}`);
                                 const devIds = messageObject.result?.identifiers?.[0]?.device_ids?.device_id;
-                                const binValue = messageObject.result?.data?.uplink_message?.decoded_payload?.text;
+                                var binValue = messageObject.result?.data?.uplink_message?.decoded_payload?.text;
                                 const binTime = messageObject.result?.data?.uplink_message?.received_at;
                                 var previousBinval = 0;
 
