@@ -277,7 +277,7 @@
 
                         buffer += new TextDecoder().decode(value);
                         const messages = buffer.split('\n\n');
-                        buffer = messages.pop();
+                        buffer = messages.pop();    
 
                         for (const message of messages) {
                             const messageObject = JSON.parse(message); // Parse the message string into a JSON object
