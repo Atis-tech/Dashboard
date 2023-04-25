@@ -283,11 +283,11 @@
                             const messageObject = JSON.parse(message); // Parse the message string into a JSON object
 
                             if (messageObject.result.name == "as.up.data.forward" && !messageObject.result.name.includes("ns.down.transmission.fail")) { // Filter for uplink messages
-                                console.log(`API Data: ${messageObject}`);
                                 const devIds = messageObject.result?.identifiers?.[0]?.device_ids?.device_id;
                                 var binValue = messageObject.result?.data?.uplink_message?.decoded_payload?.text;
                                 const binTime = messageObject.result?.data?.uplink_message?.received_at;
                                 var previousBinval = localStorage.getItem('prevBin');
+                                console.log(`Bin saved value: ${previousBinval}`);
 
                                 if(binValue==null || isNaN(binValue) || binValue==undefined){
                                     binValue = previousBinval;
