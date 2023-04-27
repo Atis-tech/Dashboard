@@ -99,16 +99,16 @@
             const bin = bins[i];
             const value = bin.value;
 
-            if (value >= 24 && value <= 47) {
+            if (value >= 20 && value <= 30) {
                 $(bin.btn).attr('data-stat', stat_hf);
                 $(bin.img).attr('src', hf_img);
-            } else if (value >= 48 && value <= 67) {
+            } else if (value >= 31 && value <= 50) {
                 $(bin.btn).attr('data-stat', stat_min);
                 $(bin.img).attr('src', min_img);
-            } else if (value >= 68 && value <= 70) {
+            } else if (value >= 51 && value <= 70) {
                 $(bin.btn).attr('data-stat', stat_emp);
                 $(bin.img).attr('src', emp_img);
-            } else if (value >= 2 && value <= 23) {
+            } else if (value >= 1 && value <= 19) {
                 $(bin.btn).attr('data-stat', stat_full);
                 $(bin.img).attr('src', full_img);
             } else {
