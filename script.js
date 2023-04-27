@@ -114,7 +114,7 @@
             } else {//error
                 $(bin.btn).attr('data-stat', stat_err);
                 $(bin.img).attr('src', err_img);
-            }
+            }//end
         }
     }
 
