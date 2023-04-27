@@ -111,7 +111,7 @@
             } else if (value >= 1 && value <= 19) {//full
                 $(bin.btn).attr('data-stat', stat_full);
                 $(bin.img).attr('src', full_img);
-            } else {//error 
+            } else {//error
                 $(bin.btn).attr('data-stat', stat_err);
                 $(bin.img).attr('src', err_img);
             }
