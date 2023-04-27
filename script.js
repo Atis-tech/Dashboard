@@ -99,13 +99,13 @@
             const bin = bins[i];
             const value = bin.value;
 
-            if (value >= 20 && value <= 30) { //half full
+            if (value >= 20 && value <= 29) { //half full
                 $(bin.btn).attr('data-stat', stat_hf);
                 $(bin.img).attr('src', hf_img);
-            } else if (value >= 31 && value <= 50) {//minimal
+            } else if (value >= 30 && value <= 44) {//minimal
                 $(bin.btn).attr('data-stat', stat_min);
                 $(bin.img).attr('src', min_img);
-            } else if (value >= 51 && value <= 70) {//emoty
+            } else if (value >= 45 && value <= 60) {//empty
                 $(bin.btn).attr('data-stat', stat_emp);
                 $(bin.img).attr('src', emp_img);
             } else if (value >= 1 && value <= 19) {//full
