@@ -97,13 +97,13 @@
             const bin = bins[i];
             const value = bin.value;
 
-            if (value >= 22 && value <= 39) { //half full
+            if (value >= 17 && value <= 39) { //half full
                 $(bin.btn).attr('data-stat', stat_hf);
                 $(bin.img).attr('src', hf_img);
             } else if (value >= 40 && value <= 70) {//minimal
                 $(bin.btn).attr('data-stat', stat_min);
                 $(bin.img).attr('src', min_img);
-            }  else if (value >= 1 && value <= 21) {//full
+            }  else if (value >= 1 && value <= 16) {//full
                 $(bin.btn).attr('data-stat', stat_full);
                 $(bin.img).attr('src', full_img);
             } else {//error
@@ -351,13 +351,11 @@
                                 //Values for Database
                                 var binVal = parseInt(binValue);
                                 var binStat = '';
-                                if (binVal >= 24 && binVal <= 47) {
+                                if (binVal >= 17 && binVal <= 39) {
                                     binStat = "HALF FULL";
-                                } else if (binVal >= 48 && binVal <= 67) {
+                                } else if (binVal >= 40 && binVal <= 70) {
                                     binStat = "MINIMAL";
-                                } else if (binVal>=68 && binVal<=70) {
-                                    binStat = "EMPTY";
-                                } else if (binVal >= 2 && binVal <= 23) {
+                                } else if (binVal >= 1 && binVal <= 16) {
                                     binStat = "FULL";
                                 } else {
                                     binStat = "ERROR";
