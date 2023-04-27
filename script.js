@@ -75,14 +75,12 @@
         //types of bin status
         var stat_hf = "HALF-FULL";
         var stat_min = "MINIMAL";
-        var stat_emp = "EMPTY";
         var stat_full = "FULL";
         var stat_err = "ERROR";
 
         //bin image images
         var hf_img = "images/sidebar/yellowbin.png";
         var min_img = "images/sidebar/bluebin.png";
-        var emp_img = "images/sidebar/emptybin.png";
         var full_img = "images/sidebar/fullbin.png";
         var err_img = "images/sidebar/errorbin.png"
 
@@ -99,16 +97,13 @@
             const bin = bins[i];
             const value = bin.value;
 
-            if (value >= 20 && value <= 29) { //half full
+            if (value >= 22 && value <= 39) { //half full
                 $(bin.btn).attr('data-stat', stat_hf);
                 $(bin.img).attr('src', hf_img);
-            } else if (value >= 30 && value <= 44) {//minimal
+            } else if (value >= 40 && value <= 70) {//minimal
                 $(bin.btn).attr('data-stat', stat_min);
                 $(bin.img).attr('src', min_img);
-            } else if (value >= 45 && value <= 60) {//empty
-                $(bin.btn).attr('data-stat', stat_emp);
-                $(bin.img).attr('src', emp_img);
-            } else if (value >= 1 && value <= 19) {//full
+            }  else if (value >= 1 && value <= 21) {//full
                 $(bin.btn).attr('data-stat', stat_full);
                 $(bin.img).attr('src', full_img);
             } else {//error
