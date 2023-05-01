@@ -74,7 +74,7 @@
         }
         //types of bin status
         var stat_hf = "HALF-FULL";
-        var stat_min = "MINIMAL";
+        var stat_min = "MINIMAL OR EMPTY";
         var stat_full = "FULL";
         var stat_err = "ERROR";
 
@@ -100,7 +100,7 @@
             if (value >= 17 && value <= 39) { //half full
                 $(bin.btn).attr('data-stat', stat_hf);
                 $(bin.img).attr('src', hf_img);
-            } else if (value >= 40 && value <= 70) {//minimal
+            } else if (value >= 40 && value <= 70) {//minimal or empty
                 $(bin.btn).attr('data-stat', stat_min);
                 $(bin.img).attr('src', min_img);
             }  else if (value >= 1 && value <= 16) {//full
@@ -354,7 +354,7 @@
                                 if (binVal >= 17 && binVal <= 39) {
                                     binStat = "HALF FULL";
                                 } else if (binVal >= 40 && binVal <= 70) {
-                                    binStat = "MINIMAL";
+                                    binStat = "MINIMAL OR EMPTY";
                                 } else if (binVal >= 1 && binVal <= 16) {
                                     binStat = "FULL";
                                 } else {

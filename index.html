@@ -125,7 +125,7 @@
             <h1
               class="lg:text-[26px] md:text-[23px] sm:text-[18px] text-bold text-white absolute top-[16%] left-[67.5%] z-10"
               id="bin_id">
-              BIN 3
+              BIN 5
             </h1>
 
             <h1 class="text-[8px] xs:text-xs text-extralight text-white absolute top-[14.5%] left-[78.9%] z-10">
@@ -136,7 +136,7 @@
               id="bin_loc">
               NATIVIDAD HALL
             </h1>
-            <img class="w-[9%] absolute top-[24%] left-[66.5%] z-10" id="bin_img" src="images/sidebar/emptybin.png"
+            <img class="w-[9%] absolute top-[24%] left-[66.5%] z-10" id="bin_img" src="images/sidebar/errorbin.png"
               alt="" />
 
             <h1 class="text-[8px] xs:text-xs text-extralight text-white absolute top-[27%] left-[78.9%] z-10">
@@ -188,40 +188,40 @@
           <!-- TODO | MAP BIN START -->
           <div class="try" id="try">
             <!-- BIN 1 START -->
-            <a href="#b1" id="bin_btn1" data-loc="ALVARADO HALL" data-id="BIN 1" data-stat="HALF-FULL"
+            <a href="#b1" id="bin_btn1" data-loc="ALVARADO HALL" data-id="BIN 1" data-stat="ERROR"
               data-pin="1">
-              <img id="bin_img1" data-stat="HALF-FULL" data-pin="1"
+              <img id="bin_img1" data-stat="ERROR" data-pin="1"
                 class="w-[5%] absolute top-[14.5%] left-[17%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl ring-cyan-400"
-                src="images/sidebar/yellowbin.png" alt="img_bin1" />
+                src="images/sidebar/errorbin.png" alt="img_bin1" />
 
             </a>
             <!-- BIN 1 END -->
 
             <!-- BIN 2 START -->
-            <a href="#b2" id="bin_btn2" data-loc="PIMENTEL HALL" data-id="BIN 2" data-stat="MINIMAL"
+            <a href="#b2" id="bin_btn2" data-loc="PIMENTEL HALL" data-id="BIN 2" data-stat="ERROR"
               data-pin="2">
-              <img id="bin_img2" data-stat="MINIMAL" data-pin="2"
+              <img id="bin_img2" data-stat="ERROR" data-pin="2"
                 class="w-[5%] absolute top-[57%] left-[19%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl ring-cyan-400"
-                src="images/sidebar/bluebin.png" alt="img_bin2" />
+                src="images/sidebar/errorbin.png" alt="img_bin2" />
 
             </a>
             <!-- BIN 2 END -->
 
             <!-- BIN 3 START -->
-            <a href="#b3" id="bin_btn3" data-loc="CHTM BUILDING" data-id="BIN 3" data-stat="EMPTY"
+            <a href="#b3" id="bin_btn3" data-loc="CHTM BUILDING" data-id="BIN 3" data-stat="ERROR"
               data-pin="3">
-              <img id="bin_img3" data-stat="EMPTY" data-pin="3"
+              <img id="bin_img3" data-stat="ERROR" data-pin="3"
                 class="w-[5%] absolute top-[8%] left-[45%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl ring-cyan-400"
-                src="images/sidebar/emptybin.png" alt="img_bin3" />
+                src="images/sidebar/errorbin.png" alt="img_bin3" />
 
             </a>
             <!-- BIN 3 END -->
 
             <!-- BIN 4 START -->
-            <a href="#b4" id="bin_btn4" data-loc="ROXAS HALL" data-id="BIN 4" data-stat="FULL" data-pin="4">
-              <img id="bin_img4" data-stat="FULL" data-pin="4"
+            <a href="#b4" id="bin_btn4" data-loc="ROXAS HALL" data-id="BIN 4" data-stat="ERROR" data-pin="4">
+              <img id="bin_img4" data-stat="ERROR" data-pin="4"
                 class="w-[5%] absolute top-[55%] left-[44%] z-10 bg-[#22223B] py-2 px-.5 rounded-xl ring-cyan-400"
-                src="images/sidebar/fullbin.png" alt="img_bin4" />
+                src="images/sidebar/errorbin.png" alt="img_bin4" />
 
             </a>
             <!-- BIN 4 END -->
@@ -235,6 +235,18 @@
 
             </a>
             <!-- BIN 5 END -->
+
+            <div id="legend">
+              <p><b class="text-[12px] text-white absolute top-[67%] right-[92%]">LEGEND:</b> </p>
+              <img class="w-[3%] absolute top-[70.5%] right-[95.3%]" src="images/sidebar/errorbin.png" alt="error"> 
+              <span class="text-[10px] text-white text-center absolute top-[71.5%] right-[91.3%]">ERROR</span> 
+              <img class="w-[3%] absolute top-[76.5%] right-[95.3%]" src="images/sidebar/bluebin.png" alt="minimal">
+              <span class="text-[10px] text-white text-center absolute top-[77.5%] right-[85.5%]">MINIMAL OR EMPTY</span>
+              <img class="w-[3%] absolute top-[82.5%] right-[95.3%]" src="images/sidebar/yellowbin.png" alt="half-full">
+              <span class="text-[10px] text-white text-center absolute top-[83.5%] right-[89.5%]">HALF-FULL</span>
+              <img class="w-[3%] absolute top-[88.5%] right-[95.3%]" src="images/sidebar/fullbin.png" alt="full">
+              <span class="text-[10px] text-white absolute text-center top-[89.5%] right-[92%]">FULL</span>
+            </div>
           </div>
           <!-- TODO | MAP BIN END -->
 
@@ -245,7 +257,6 @@
           </div>
           <!-- TODO LINE END -->
         </div>
-
         <!-- TODO MAP SECTION END -->
       </div>
       <!-- TODO BODY CONTAINER END -->
