@@ -103,7 +103,7 @@
             } else if (value >= 40 && value <= 70) {//minimal or empty
                 $(bin.btn).attr('data-stat', stat_min);
                 $(bin.img).attr('src', min_img);
-            }  else if (value >= 1 && value <= 16) {//full
+            }  else if (value >= 0 && value <= 16) {//full
                 $(bin.btn).attr('data-stat', stat_full);
                 $(bin.img).attr('src', full_img);
             } else {//error
@@ -355,7 +355,7 @@
                                     binStat = "HALF FULL";
                                 } else if (binVal >= 40 && binVal <= 70) {
                                     binStat = "MINIMAL OR EMPTY";
-                                } else if (binVal >= 1 && binVal <= 16) {
+                                } else if (binVal >= 0 && binVal <= 16) {
                                     binStat = "FULL";
                                 } else {
                                     binStat = "ERROR";
