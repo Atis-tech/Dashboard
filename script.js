@@ -60,17 +60,17 @@
         console.log(`Previous Bin Status: ${storedObject}`);
         if (storedObject !== null) {
             var parsedObject = JSON.parse(storedObject);
-            bin1 = (parsedObject['bin-1']!=null && !isNaN(parsedObject['bin-1']) && parsedObject['bin-1']!=undefined) ? parsedObject['bin-1'] : 0;
-            bin2 = (parsedObject['bin-2']!=null && !isNaN(parsedObject['bin-2']) && parsedObject['bin-2']!=undefined) ? parsedObject['bin-2'] : 0;
-            bin3 = (parsedObject['bin-3']!=null && !isNaN(parsedObject['bin-3']) && parsedObject['bin-3']!=undefined) ? parsedObject['bin-3'] : 0;
-            bin4 = (parsedObject['bin-4']!=null && !isNaN(parsedObject['bin-4']) && parsedObject['bin-4']!=undefined) ? parsedObject['bin-4'] : 0;
-            bin5 = (parsedObject['bin-5']!=null && !isNaN(parsedObject['bin-5']) && parsedObject['bin-5']!=undefined) ? parsedObject['bin-5'] : 0;
+            bin1 = (parsedObject['bin-1']!=null && !isNaN(parsedObject['bin-1']) && parsedObject['bin-1']!=undefined) ? parsedObject['bin-1'] : 100;
+            bin2 = (parsedObject['bin-2']!=null && !isNaN(parsedObject['bin-2']) && parsedObject['bin-2']!=undefined) ? parsedObject['bin-2'] : 100;
+            bin3 = (parsedObject['bin-3']!=null && !isNaN(parsedObject['bin-3']) && parsedObject['bin-3']!=undefined) ? parsedObject['bin-3'] : 100;
+            bin4 = (parsedObject['bin-4']!=null && !isNaN(parsedObject['bin-4']) && parsedObject['bin-4']!=undefined) ? parsedObject['bin-4'] : 100;
+            bin5 = (parsedObject['bin-5']!=null && !isNaN(parsedObject['bin-5']) && parsedObject['bin-5']!=undefined) ? parsedObject['bin-5'] : 100;
         } else {
-            bin1 = 0;
-            bin2 = 0;
-            bin3 = 0;
-            bin4 = 0;
-            bin5 = 0;
+            bin1 = 100;
+            bin2 = 100;
+            bin3 = 100;
+            bin4 = 100;
+            bin5 = 100;
         }
         //types of bin status
         var stat_hf = "HALF-FULL";
